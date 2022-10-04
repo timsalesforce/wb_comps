@@ -4,7 +4,6 @@ import { Option, SfdcApi } from '../types'
 import NProgress from 'nprogress'
 import React from "react"
 import Container from "@salesforce/design-system-react/components/alert/container"
-import { clear } from "console"
 import Metadata from "./Metadata"
 import RecordEditor from "./RecordEditor"
 import RestExplorer from "./RestExplorer"
@@ -106,7 +105,6 @@ const Workbench: FunctionComponent<Props> = props => {
       <ErrorMessage>{errorMessage}</ErrorMessage>
       {sid && <Tabs id="tabs-example-default" selectedIndex={selectedIndex} onSelect={(idx: number) => {
         setSelectedIndex(idx)
-        clear()
       }}>
         <TabsPanel label="Standard and Custom Objects">
           <Dropdown 

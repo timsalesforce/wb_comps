@@ -81,14 +81,12 @@ const Retrieve: FunctionComponent<Props> = props => {
     }, [retrieveId])
 
     const retrieve = useCallback(async () => {
-      console.log(`Using ${packageFile}`)
         setZipFile(undefined)
         setRetrieveDone(false)
         setDescribeResponse(undefined)
         try {
           NProgress.start()
           const response = await props.sendRetrieve({types: metadataTypes, packageNames, singlePackage, sessionId: props.sid, soapEndpoint: props.soapEndpoint, apiVersion: props.apiVersion})
-          console.log(response)
           setRetrieveId(response.result.id)
           setDescribeResponse(response.result)
         } catch (error) {

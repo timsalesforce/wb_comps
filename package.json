@@ -21,11 +21,13 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@rollup/plugin-typescript": "^8.5.0",
+    "@salesforce/design-system-react": "^0.10.48",
     "@types/node": "^18.8.0",
     "@types/nprogress": "^0.2.0",
     "@types/react": "^18.0.21",
     "@types/react-json": "^0.2.3",
     "@types/styled-components": "^5.1.26",
+    "cluster": "^0.7.7",
     "nprogress": "^0.2.0",
     "react": "^18.2.0",
     "react-json": "^0.2.1",
@@ -37,8 +39,5 @@
     "styled-components": "^5.3.6",
     "tslib": "^2.4.0",
     "typescript": "^4.8.4"
-  },
-  "dependencies": {
-    "@salesforce/design-system-react": "^0.10.48"
   }
 }
