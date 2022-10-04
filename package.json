@@ -21,6 +21,8 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@rollup/plugin-typescript": "^8.5.0",
+    "@salesforce-ux/design-system": "^2.19.0",
+    "@salesforce/babel-preset-design-system-react": "^3.0.0",
     "@salesforce/design-system-react": "^0.10.48",
     "@types/node": "^18.8.0",
     "@types/nprogress": "^0.2.0",
