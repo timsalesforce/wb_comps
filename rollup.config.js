@@ -32,7 +32,6 @@ export default [
         external: ["react", 
                 "react-dom", 
                 "styled-components", 
-                "@salesforce/design-system-react/components/alert/container",
                 "child_process",
                 "dns",
                 "fs",
