@@ -1,19 +1,24 @@
-import { SessionContext } from "context";
-import { FunctionComponent, useContext, useMemo } from "react";
+import { FunctionComponent, useMemo } from "react";
 import styled from "styled-components";
 import { BrandBand, Button } from '@salesforce/design-system-react'
+import React from "react";
 
 const Header = styled.div`
     display: flex;
     justify-content: space-around;
     padding: 1em; 
 `
-const WorkbenchHeader: FunctionComponent = () => {
-    const {sid, sfdcBaseUrl, signout} = useContext(SessionContext)
+
+interface Props {
+    sid: string
+    sfdcBaseUrl: string
+    signout: () => Promise<any>
+}
+const WorkbenchHeader: FunctionComponent<Props> = (props) => {
 
     const orgId = useMemo(() => {
-        return sid?.substring(0, 15)
-    }, [sid])
+        return props.sid?.substring(0, 15)
+    }, [props.sid])
     
     return <div>
         <BrandBand
@@ -23,9 +28,9 @@ const WorkbenchHeader: FunctionComponent = () => {
 			>
             <Header className="slds-box slds-theme_default">
                 Workbench App
-                {sid && <div>OrgId: {orgId}</div>}
-                {sid && <div>Url: {sfdcBaseUrl}</div>}
-                {sid && <Button onClick={signout} label="Sign Out"/>}
+                {props.sid && <div>OrgId: {orgId}</div>}
+                {props.sid && <div>Url: {props.sfdcBaseUrl}</div>}
+                {props.sid && <Button onClick={props.signout} label="Sign Out"/>}
             </Header>
         </BrandBand>
     </div>

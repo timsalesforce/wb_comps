@@ -1,4 +1,4 @@
-import { Slider, Tabs, TabsPanel } from "@salesforce/design-system-react"
+import { Tabs, TabsPanel } from "@salesforce/design-system-react"
 import React from "react"
 import {  FunctionComponent, useState } from "react"
 import styled from "styled-components"

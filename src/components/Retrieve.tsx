@@ -1,8 +1,7 @@
 import { Button, Checkbox, IconSettings, Input, Radio, RadioGroup } from "@salesforce/design-system-react"
-import {  ChangeEvent, FunctionComponent, useCallback, useContext, useEffect, useState } from "react"
+import {  ChangeEvent, FunctionComponent, useCallback, useEffect, useState } from "react"
 import NProgress from 'nprogress'
 import { NameAndMembers, RetrievePayload, RetrieveStatusPayload } from "../types"
-import { SessionContext } from "../context"
 import styled from "styled-components"
 import React from "react"
 

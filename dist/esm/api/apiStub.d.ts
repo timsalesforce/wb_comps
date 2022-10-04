@@ -1,0 +1,18 @@
+import { AdhocRestPayload, AdhocRestPostPayload, BaseRestPayload, DeployPayload, DeployStatusPayload, DescribeObjectPayload, RetrievePayload, RetrieveStatusPayload, SObjectDescribeResult, SOQLQueryPayload, UpdateRecordPayload } from '../types';
+export declare function setAxiosAuthHeader(sid: string): void;
+export declare function setAxiosBaseURL(url: string): void;
+export declare function signin(baseUrl: string): Promise<any>;
+export declare function login(username: string, password: string, baseUrl: string, apiVersion?: string): Promise<any>;
+export declare function signout(): Promise<any>;
+export declare function describeGlobal(payload: BaseRestPayload): Promise<any>;
+export declare function sendRest(payload: AdhocRestPayload): Promise<any>;
+export declare function postRest(payload: AdhocRestPostPayload): Promise<any>;
+export declare function patchRest(payload: AdhocRestPostPayload): Promise<any>;
+export declare function describeObject(payload: DescribeObjectPayload): Promise<SObjectDescribeResult>;
+export declare function runQuery(payload: SOQLQueryPayload): Promise<any>;
+export declare function sendRetrieve(payload: RetrievePayload): Promise<any>;
+export declare function sendDeploy(payload: DeployPayload): Promise<any>;
+export declare function sendRetrieveStatus(payload: RetrieveStatusPayload): Promise<any>;
+export declare function sendDeployStatus(payload: DeployStatusPayload): Promise<any>;
+export declare function updateRecord(payload: UpdateRecordPayload): Promise<any>;
+export declare function handleError(error: any): string;

@@ -1,6 +1,5 @@
 import { Button, IconSettings, Input } from "@salesforce/design-system-react"
-import { ChangeEvent, FunctionComponent, useCallback, useContext, useState } from "react"
-import { SessionContext } from "../context"
+import { ChangeEvent, FunctionComponent, useCallback, useState } from "react"
 import NProgress from 'nprogress'
 import { AdhocRestPayload, DescribeObjectPayload, SObjectDescribeResult, UpdateRecordPayload } from "../types"
 import InputElement from "./InputElement"

@@ -1,6 +1,6 @@
-import { Button, Combobox, Dropdown, IconSettings, Tabs, TabsPanel } from "@salesforce/design-system-react"
-import { FunctionComponent, useCallback, useContext, useEffect, useState } from "react"
-import { AdhocRestPayload, DeployPayload, DeployStatusPayload, AdhocRestPostPayload, Option, RetrievePayload, RetrieveStatusPayload, SfdcApi, SObjectDescribeResult, UpdateRecordPayload } from '../types'
+import { Dropdown, IconSettings, Tabs, TabsPanel } from "@salesforce/design-system-react"
+import { FunctionComponent, useCallback, useEffect, useState } from "react"
+import { Option, SfdcApi } from '../types'
 import NProgress from 'nprogress'
 import React from "react"
 import Container from "@salesforce/design-system-react/components/alert/container"
@@ -11,6 +11,7 @@ import RestExplorer from "./RestExplorer"
 import Signin from "./Signin"
 import SOQL from "./SOQL"
 import styled from "styled-components"
+import WorkbenchHeader from "./WorkbenchHeader"
 
 interface Props {
     api: any
@@ -67,7 +68,7 @@ const Workbench: FunctionComponent<Props> = props => {
         sfdcBaseUrl && api.setAxiosBaseURL(sfdcBaseUrl)
     }, [sfdcBaseUrl, api])
 
-    const shouldCollapse = useCallback((entry) => {
+    const shouldCollapse = useCallback((entry: any) => {
         return entry.name !== objectName
     }, [objectName])
 
@@ -101,6 +102,7 @@ const Workbench: FunctionComponent<Props> = props => {
 
     return <IconSettings iconPath="/assets/icons"> 
     <Container>
+      <WorkbenchHeader sid={sid} sfdcBaseUrl={sfdcBaseUrl} signout={api.signout}/>
       <ErrorMessage>{errorMessage}</ErrorMessage>
       {sid && <Tabs id="tabs-example-default" selectedIndex={selectedIndex} onSelect={(idx: number) => {
         setSelectedIndex(idx)

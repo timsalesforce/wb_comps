@@ -1,7 +1,6 @@
 import { Button, IconSettings, Input, Radio, RadioGroup, Textarea } from "@salesforce/design-system-react"
-import { ChangeEvent, FunctionComponent, useCallback, useContext, useEffect, useState } from "react"
+import { ChangeEvent, FunctionComponent, useCallback, useEffect, useState } from "react"
 import NProgress from 'nprogress'
-import { SessionContext } from "../context"
 import styled from "styled-components"
 import React from "react"
 import { AdhocRestPayload, AdhocRestPostPayload } from "../types"
@@ -49,7 +48,7 @@ const RestExplorer: FunctionComponent<Props> = (props) => {
                     break
             }
           setDescribeResponse(describeResponse)
-        } catch (error) {
+        } catch (error: any) {
           setErrorMessage(props.handleError(error))
         } finally {
           NProgress.done()

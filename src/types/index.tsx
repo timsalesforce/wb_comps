@@ -115,7 +115,7 @@ export interface SfdcApi {
     setAxiosBaseURL: (url: string) => void
     signin: (baseUrl: string) => Promise<any>
     login: (username: string, password: string, baseUrl: string, apiVersion?: string) => Promise<any>
-    signout?: () => Promise<any>
+    signout: () => Promise<any>
     describeGlobal: (payload: BaseRestPayload) => Promise<any>
     sendRest: (payload: AdhocRestPayload) => Promise<any>
     postRest: (payload: AdhocRestPostPayload) => Promise<any>

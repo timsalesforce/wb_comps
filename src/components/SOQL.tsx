@@ -1,5 +1,5 @@
 import { Button, Combobox, Dropdown } from "@salesforce/design-system-react"
-import { FunctionComponent, useCallback, useContext, useEffect, useState } from "react"
+import { FunctionComponent, useCallback, useEffect, useState } from "react"
 import { DescribeObjectPayload, FieldOption, Option, QueryRecord, SObjectDescribeResult, SOQLQueryPayload } from '../types'
 import NProgress from 'nprogress'
 import React from "react"
@@ -50,7 +50,7 @@ const SOQL: FunctionComponent<Props> = props => {
             NProgress.start()
             const describeResult: SObjectDescribeResult = await describeObject({object, apiVersion, sfdcBaseUrl})
             setFields(describeResult.fields.map(f => { return {value: f.name, label: f.name} }))
-        } catch (error) {
+        } catch (error: any) {
             setErrorMessage(handleError(error))
         } finally {
             NProgress.done()
