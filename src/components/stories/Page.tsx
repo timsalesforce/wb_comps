@@ -1,4 +1,5 @@
 import React from 'react';
+import Signin from '../Signin';
 
 import { Header } from './Header';
 import './page.css';
@@ -68,6 +69,11 @@ export const Page: React.VFC = () => {
           Viewports addon in the toolbar
         </div>
       </section>
+      <Signin signin={function (sid: string, baseUrl: string, apiVersion: string): Promise<any> {
+        throw new Error('Function not implemented.');
+      } } login={function (username: string, password: string, baseUrl: string, apiVersion: string): Promise<any> {
+        throw new Error('Function not implemented.');
+      } }></Signin>
     </article>
   );
 };
