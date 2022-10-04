@@ -27,6 +27,7 @@
     "@types/react": "^18.0.21",
     "@types/react-json": "^0.2.3",
     "@types/styled-components": "^5.1.26",
+    "child_process": "^1.0.2",
     "cluster": "^0.7.7",
     "nprogress": "^0.2.0",
     "react": "^18.2.0",
