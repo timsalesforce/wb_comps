@@ -1,6 +1,7 @@
 import { FunctionComponent } from "react";
+import { SfdcApi } from '../types';
 interface Props {
-    api: any;
+    api: SfdcApi;
     sid: string;
     apiVersion: string;
     sfdcBaseUrl: string;

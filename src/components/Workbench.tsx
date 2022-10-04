@@ -14,7 +14,7 @@ import styled from "styled-components"
 import WorkbenchHeader from "./WorkbenchHeader"
 
 interface Props {
-    api: any
+    api: SfdcApi
     sid: string
     apiVersion: string
     sfdcBaseUrl: string
