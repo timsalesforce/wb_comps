@@ -31,7 +31,16 @@ export default [
             terser(),
             json()
         ],
-        external: ["react", "react-dom", "styled-components", "@salesforce/design-system-react/components/alert/container"]
+        external: ["react", 
+                "react-dom", 
+                "styled-components", 
+                "@salesforce/design-system-react/components/alert/container",
+                "child_process",
+                "dns",
+                "fs",
+                "net",
+                "tls"
+            ]   
     },
     {
         input: "dist/esm/types/index.d.ts",
