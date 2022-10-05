@@ -30,13 +30,7 @@ export default [
             json()
         ],
         external: ["react", 
-                "react-dom", 
-                "styled-components", 
-                "child_process",
-                "dns",
-                "fs",
-                "net",
-                "tls"
+                "react-dom"
             ]   
     },
     {
