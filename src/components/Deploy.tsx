@@ -1,9 +1,14 @@
-import { Button, Checkbox, Input, Radio, RadioGroup } from "@salesforce/design-system-react"
 import { ChangeEvent, FunctionComponent, useCallback, useEffect, useState } from "react"
 import NProgress from 'nprogress'
 import styled from "styled-components"
 import { DeployPayload, DeployStatusPayload } from "../types/index"
 import React from "react"
+import Input from "@mui/material/Input/Input"
+import Checkbox from "@mui/material/Checkbox/Checkbox"
+import FormControlLabel from "@mui/material/FormControlLabel/FormControlLabel"
+import RadioGroup from "@mui/material/RadioGroup/RadioGroup"
+import Radio from "@mui/material/Radio/Radio"
+import Button from "@mui/material/Button/Button"
 
 interface Props {
     setErrorMessage: (message: string) => void
@@ -122,83 +127,75 @@ const Deploy: FunctionComponent<Props> = props => {
         </PaddedDiv>
         <PaddedDiv>
         <div className="slds-text-title_bold slds-form-element__label">Parameters</div>
-            <Checkbox
+            <FormControlLabel
+                label="Allow missing files"
+                control={<Checkbox></Checkbox>}
                 id="allowMissingFiles"
-                labels={{
-                    label: 'Allow Missing Files'
-                }}
-                onChange={(_event: any, state: any) => {
-                    setAllowMissingFiles(state.checked)
+                onChange={(_event: any, checked: boolean) => {
+                    setAllowMissingFiles(checked)
                 }}
                 checked={allowMissingFiles}
             />
-            <Checkbox
+            <FormControlLabel
                 id="autoUpdatePackage"
-                labels={{
-                    label: 'Auto Update Package'
-                }}
-                onChange={(_event: any, state: any) => {
-                    setAutoUpdatePackage(state.checked)
+                control={<Checkbox></Checkbox>}
+                label='Auto Update Package'
+                onChange={(_event: any, checked: boolean) => {
+                    setAutoUpdatePackage(checked)
                 }}
                 checked={autoUpdatePackage}
             />
-            <Checkbox
+            <FormControlLabel
                 id="checkOnly"
-                labels={{
-                    label: 'Check Only'
-                }}
-                onChange={(_event: any, state: any) => {
-                    setCheckOnly(state.checked)
+                control={<Checkbox></Checkbox>}
+                label='Check Only'
+                onChange={(_event: any, checked: boolean) => {
+                    setCheckOnly(checked)
                 }}
                 checked={checkOnly}
             />
-            <Checkbox
+            <FormControlLabel
                 id="ignoreWarnings"
-                labels={{
-                    label: 'Ignore Warnings'
-                }}
-                onChange={(_event: any, state: any) => {
-                    setIgnoreWarnings(state.checked)
+                control={<Checkbox></Checkbox>}
+                label='Ignore Warnings'
+                onChange={(_event: any, checked: boolean) => {
+                    setIgnoreWarnings(checked)
                 }}
                 checked={ignoreWarnings}
             />
-            <Checkbox
+            <FormControlLabel
                 id="performRetrieve"
-                labels={{
-                    label: 'Perform Retrieve'
-                }}
-                onChange={(_event: any, state: any) => {
-                    setPerformRetrieve(state.checked)
+                control={<Checkbox></Checkbox>}
+                label='Perform Retrieve'
+                onChange={(_event: any, checked: boolean) => {
+                    setPerformRetrieve(checked)
                 }}
                 checked={performRetrieve}
             />
-            <Checkbox
+            <FormControlLabel
                 id="purgeOnDelete"
-                labels={{
-                    label: 'Purge On Delete'
-                }}
-                onChange={(_event: any, state: any) => {
-                    setPurgeOnDelete(state.checked)
+                control={<Checkbox></Checkbox>}
+                label='Purge On Delete'
+                onChange={(_event: any, checked: boolean) => {
+                    setPurgeOnDelete(checked)
                 }}
                 checked={purgeOnDelete}
             />
-            <Checkbox
+            <FormControlLabel
                 id="rollbackOnError"
-                labels={{
-                    label: 'Rollback On Error'
-                }}
-                onChange={(_event: any, state: any) => {
-                    setRollbackOnError(state.checked)
+                control={<Checkbox></Checkbox>}
+                label='Rollback On Error'
+                onChange={(_event: any, checked: boolean) => {
+                    setRollbackOnError(checked)
                 }}
                 checked={rollbackOnError}
             />
-            <Checkbox
+            <FormControlLabel
                 id="singlePackage"
-                labels={{
-                    label: 'Single Package'
-                }}
-                onChange={(_event: any, state: any) => {
-                    setSinglePackage(state.checked)
+                control={<Checkbox></Checkbox>}
+                label='Single Package'
+                onChange={(_event: any, checked: boolean) => {
+                    setSinglePackage(checked)
                 }}
                 checked={singlePackage}
             />
@@ -211,31 +208,27 @@ const Deploy: FunctionComponent<Props> = props => {
                 name="Test Level"
                 style={{border: 0}}
             >
-                <Radio
+                <FormControlLabel
+                    control={<Radio></Radio>}
                     id="NoTestRun"
                     value="NoTestRun"
-                    defaultChecked="true"
-                    labels={{label: 'None'}}>
-
-                </Radio>
-                <Radio
+                    checked={true}
+                    label='None'/>
+                <FormControlLabel
+                    control={<Radio></Radio>}
                     id="RunLocalTests"
                     value="RunLocalTests"
-                    labels={{label: 'Run Local'}}>
-
-                </Radio>
-                <Radio
+                    label='Run Local'/>
+                <FormControlLabel
+                    control={<Radio></Radio>}
                     id="RunAllTestsInOrg"
                     value="RunAllTestsInOrg"
-                    labels={{label: 'Run All'}}>
-
-                </Radio>
-                <Radio
+                    label='Run All'/>
+                <FormControlLabel
+                    control={<Radio></Radio>}
                     id="RunSpecifiedTests"
                     value="RunSpecifiedTests"
-                    labels={{label: 'Run Specified'}}>
-
-                </Radio>
+                    label='Run Specified'/>
             </RadioGroup>
             </div>
             {testLevel && testLevel === 'RunSpecifiedTests' && <Input type="text" placeholder="Run tests (comma separated)" onChange={(e: ChangeEvent<HTMLInputElement>) => setRunTests(e.target.value.split(','))}></Input>}

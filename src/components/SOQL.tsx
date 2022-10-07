@@ -1,8 +1,8 @@
-import { Button, Combobox, Dropdown } from "@salesforce/design-system-react"
-import { FunctionComponent, useCallback, useEffect, useState } from "react"
+import { FormEvent, FunctionComponent, useCallback, useEffect, useState } from "react"
 import { DescribeObjectPayload, FieldOption, Option, QueryRecord, SObjectDescribeResult, SOQLQueryPayload } from '../types'
 import NProgress from 'nprogress'
 import React from "react"
+import { MenuItem, Select } from "@mui/material"
 
 interface Props {
     setErrorMessage: (message: string) => void
@@ -19,14 +19,14 @@ interface Props {
 const SOQL: FunctionComponent<Props> = props => {
 
     const {setErrorMessage, fetchObjects, objects, sid, apiVersion, sfdcBaseUrl,
-        describeObject, handleError, runQuery} = props
+        describeObject, handleError} = props
 
     const [selectedObject, setSelectedObject] = useState<string>()
     const [objectOptions, setObjectOptions] = useState<any[]>()
-    const [fields, setFields] = useState<Option[]>()
+    const [_fields, setFields] = useState<Option[]>()
     const [selected, setSelected] = useState<FieldOption[]>([])
-    const [query, setQuery] = useState<string>()
-    const [jsonResponse, setJsonResponse] = useState<QueryRecord[]>()
+    const [_query, setQuery] = useState<string>()
+    const [jsonResponse, _setJsonResponse] = useState<QueryRecord[]>()
     
     useEffect(() => {
         if (sid) {
@@ -57,36 +57,31 @@ const SOQL: FunctionComponent<Props> = props => {
         }
     }, [apiVersion, sfdcBaseUrl])
 
-    const executeQuery = useCallback(async () => {
-        try {
-            NProgress.start()
-            const response = await runQuery({query: query!, apiVersion, sfdcBaseUrl})
-            const records: QueryRecord[] = response.records.map((r: any) => { 
-                return { fields: Object.entries(r).filter(es => typeof es[1] === 'string' || typeof es[1] === 'boolean').map(e => {
-                    return { name: e[0], value: e[1] + "" }
-                })}
-            })
-            setJsonResponse(records)
-        } catch (error) {
-            setErrorMessage(error instanceof Error ? error.message : error + '')
-        } finally {
-            NProgress.done()
-        }
-    }, [query, apiVersion, sfdcBaseUrl])
+    // const executeQuery = useCallback(async () => {
+    //     try {
+    //         NProgress.start()
+    //         const response = await runQuery({query: query!, apiVersion, sfdcBaseUrl})
+    //         const records: QueryRecord[] = response.records.map((r: any) => { 
+    //             return { fields: Object.entries(r).filter(es => typeof es[1] === 'string' || typeof es[1] === 'boolean').map(e => {
+    //                 return { name: e[0], value: e[1] + "" }
+    //             })}
+    //         })
+    //         setJsonResponse(records)
+    //     } catch (error) {
+    //         setErrorMessage(error instanceof Error ? error.message : error + '')
+    //     } finally {
+    //         NProgress.done()
+    //     }
+    // }, [query, apiVersion, sfdcBaseUrl])
 
     return <div>
-        <Dropdown 
+        <Select 
             label={selectedObject || 'Select an Object'} 
-            type="picklist" 
-            align="left"
-            iconCategory="utility"
-            iconName="down"
-            length="10"
-            iconPosition="right"
             onOpen={fetchObjects}
-            onSelect={(o: Option) => populateFields(o.label)}
-            options={objectOptions}/>
-        <Combobox
+            onSelect={(e: FormEvent) => populateFields(e.currentTarget.innerHTML)}>
+                {objectOptions?.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
+        </Select>
+        {/* <Combobox
             id="combobox-unique-id"
             menuItemVisibleLength={5}
             events={{
@@ -108,8 +103,8 @@ const SOQL: FunctionComponent<Props> = props => {
             options={fields}
             value={query}
             selection={selected}
-        />
-        <Button
+        /> */}
+        {/* <Button
             onClick={executeQuery}
             label="Query"
         />
@@ -121,7 +116,7 @@ const SOQL: FunctionComponent<Props> = props => {
                 setFields(undefined)
             }}
             label="Clear"
-        />
+        /> */}
         <table>
             {jsonResponse && jsonResponse.length > 0 && jsonResponse[0].fields.map(f => <th>{f.name}</th>)}
             {jsonResponse?.map((r, idx) => <tr key={idx}>

@@ -1,4 +1,9 @@
-import { Combobox, Input } from "@salesforce/design-system-react"
+import { SelectOption } from "@mui/base"
+import FormControl from "@mui/material/FormControl/FormControl"
+import FormControlLabel from "@mui/material/FormControlLabel/FormControlLabel"
+import Input from "@mui/material/Input/Input"
+import MenuItem from "@mui/material/MenuItem/MenuItem"
+import Select from "@mui/material/Select/Select"
 import React from "react"
 import { FunctionComponent, useCallback, useEffect, useState } from "react"
 
@@ -8,7 +13,7 @@ interface IProps {
     label: string
     value: any
     type: string
-    options?: any[]
+    options?: SelectOption<string>[]
 }
 
 const InputElement: FunctionComponent<IProps> = (props) => {
@@ -22,35 +27,27 @@ const InputElement: FunctionComponent<IProps> = (props) => {
             setSelection([{label: props.value}])
     }, [props.value])
 
-    const getComboBox = useCallback((options: any) => {
-        return <Combobox
-                    events={{
-                        onSelect: (event: any, data: any) => {
-                            props.onChange(event, props.label, data.selection[0].label)
+    const getComboBox = useCallback((options: SelectOption<string>[]) => {
+        return <FormControl>
+                  <Select
+                    onChange={(event: any) => {
+                            props.onChange(event, props.label, event.target.value)
                             setInputValue('')
-                            setSelection(data.selection)
                         }
-                    }}
-                    labels={{
-                        label: props.label
-                    }}
-                    value={inputValue}
-                    selection={selection}
-                    align="left"
-                    iconCategory="utility"
-                    iconName="down"
-                    length="10"
-                    iconPosition="right"
-                    variant="readonly"
-                    options={options}/>
+                    }
+                    label={props.label}
+                    value={inputValue}>
+                        {options.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
+                    </Select>
+                </FormControl>
     }, [props.label, inputValue, selection])
 
     return <div key={props.label}>
         {props.type === 'picklist' && 
-            getComboBox(props.options) || 
+            getComboBox(props.options || [{value: '', label: ''}]) || 
         props.type === 'boolean' && 
-            getComboBox([{label: 'true'}, {label: 'false'}]) ||
-        <Input type="text" value={props.value} label={props.label} disabled={props.disabled} onChange={(e: any) => props.onChange(e)}></Input>}
+            getComboBox([{value: "true", label: 'true'}, {value: "true", label: 'false'}]) ||
+        <FormControlLabel control={<Input></Input>} value={props.value} label={props.label} disabled={props.disabled} onChange={(e: any) => props.onChange(e)}/>}
     </div>
 }
 

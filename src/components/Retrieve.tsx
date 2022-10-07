@@ -1,9 +1,9 @@
-import { Button, Checkbox, IconSettings, Input, Radio, RadioGroup } from "@salesforce/design-system-react"
 import {  ChangeEvent, FunctionComponent, useCallback, useEffect, useState } from "react"
 import NProgress from 'nprogress'
 import { NameAndMembers, RetrievePayload, RetrieveStatusPayload } from "../types"
 import styled from "styled-components"
 import React from "react"
+import { Button, Checkbox, FormControlLabel, Input, Radio, RadioGroup } from "@mui/material"
 
 interface Props {
     setErrorMessage: (message: string) => void
@@ -46,7 +46,7 @@ const Retrieve: FunctionComponent<Props> = props => {
     const [retrieveId, setRetrieveId] = useState<string>()
     const [retrieveDone, setRetrieveDone] = useState<boolean>()
     const [zipFile, setZipFile] = useState<string>()
-    const [packageFile, setPackageFile] = useState<File>()
+    const [_packageFile, setPackageFile] = useState<File>()
     const [packageNames, setPackageNames] = useState<string[]>([])
     const [singlePackage, setSinglePackage] = useState<boolean>(false)
     const [retrieveType, setRetrieveType] = useState<string>('file')
@@ -161,25 +161,22 @@ const Retrieve: FunctionComponent<Props> = props => {
   }, [])
 
     return <div>
-      <IconSettings 
-        iconPath="/assets/icons"
-      >
         <PaddedDiv>
           <RadioGroup
-              labels={{label: 'Choose Input Type'}}
               onChange={(event: any) => setRetrieveType(event.target.value)}
               name="Type"
             >
-            <Radio
+            <FormControlLabel
+              control={<Radio/>}
               id="file"
               value="file"
-              defaultChecked="true"
-              labels={{label: 'Package XML'}}
+              label='Package XML'
             />
-            <Radio
+            <FormControlLabel
+              control={<Radio/>}
               id="metadata_group"
               value="metadata_group"
-              labels={{label: 'Metadata groups'}}
+              label='Metadata groups'
             />
           </RadioGroup>
         </PaddedDiv>
@@ -193,13 +190,12 @@ const Retrieve: FunctionComponent<Props> = props => {
         <PaddedDiv>
           <legend className="slds-form-element__legend slds-form-element__label">Parameters</legend>
           <Input type="text" placeholder="Package names (comma sep)" onChange={(e: ChangeEvent<HTMLInputElement>) => setPackageNames(e.target.value.split(','))}></Input>
-          <Checkbox
+          <FormControlLabel
+                control={<Checkbox/>}
                 id="singlePackage"
-                labels={{
-                    label: 'Single Package'
-                }}
-                onChange={(_event: any, state: any) => {
-                    setSinglePackage(state.checked)
+                label='Single Package'
+                onChange={(_event: any, checked: boolean) => {
+                    setSinglePackage(checked)
                 }}
                 checked={singlePackage}
             />
@@ -208,7 +204,6 @@ const Retrieve: FunctionComponent<Props> = props => {
         <Button onClick={clear}>Clear</Button>
         {retrieveDone && !zipFile && <Button onClick={downloadZip}>Fetch Zip</Button>}
         {zipFile && <a download href={`data:application/zip;base64,${zipFile}`}>Download</a>}
-      </IconSettings>
     </div>
 }
 

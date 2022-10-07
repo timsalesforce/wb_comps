@@ -1,9 +1,10 @@
-import { Button, IconSettings, Input } from "@salesforce/design-system-react"
 import { ChangeEvent, FunctionComponent, useCallback, useState } from "react"
 import NProgress from 'nprogress'
 import { AdhocRestPayload, DescribeObjectPayload, SObjectDescribeResult, UpdateRecordPayload } from "../types"
 import InputElement from "./InputElement"
 import React from "react"
+import Input from "@mui/material/Input/Input"
+import Button from "@mui/material/Button/Button"
 
 
 interface Props {
@@ -101,7 +102,7 @@ const RecordEditor: FunctionComponent<Props> = (props) => {
         return entityFields[f[0]].values
     }, [entityFields])
 
-    return <IconSettings iconPath="/assets/icons">
+    return <div>
         <Input type="text" name="entity-type" placeholder="Entity Type" onChange={(e: ChangeEvent<HTMLInputElement>) => setEntityType(e.target.value)}/>
         <Input type="text" name="record-id" placeholder="Record ID" onChange={(e: ChangeEvent<HTMLInputElement>) => setRecordId(e.target.value)}/>
         <Button onClick={fetch}>Fetch Record</Button>
@@ -118,7 +119,7 @@ const RecordEditor: FunctionComponent<Props> = (props) => {
                         options={getOptions(f)}/>)
         }
         {Object.keys(newRecord).length > 0 && <Button onClick={_updateRecord}>Save</Button>}
-    </IconSettings>
+    </div>
 }
 
 export default RecordEditor

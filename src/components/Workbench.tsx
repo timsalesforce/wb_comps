@@ -1,9 +1,7 @@
-import { Dropdown, IconSettings, Tabs, TabsPanel } from "@salesforce/design-system-react"
-import { FunctionComponent, useCallback, useEffect, useState } from "react"
+import { FunctionComponent, SyntheticEvent, useCallback, useEffect, useState } from "react"
 import { Option, SfdcApi } from '../types'
 import NProgress from 'nprogress'
 import React from "react"
-import Container from "@salesforce/design-system-react/components/alert/container"
 import Metadata from "./Metadata"
 import RecordEditor from "./RecordEditor"
 import RestExplorer from "./RestExplorer"
@@ -11,6 +9,7 @@ import Signin from "./Signin"
 import SOQL from "./SOQL"
 import styled from "styled-components"
 import WorkbenchHeader from "./WorkbenchHeader"
+import { Box, MenuItem, Select, Tab, Tabs, Typography } from "@mui/material"
 
 interface Props {
     api: SfdcApi
@@ -22,25 +21,43 @@ interface Props {
 const ErrorMessage = styled.div`
   color: red;
 `
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
 
 const Workbench: FunctionComponent<Props> = props => {
-    const ReactJson = require('react-json-view-ts').default
-
-    // const {api, setApi, sid, setSid, objects, apiVersion, 
-    //     setApiVersion, sfdcBaseUrl, setSfdcBaseUrl, fetchObjects, soapEndpoint,
-    //     setSoapEndpoint} = useContext(SessionContext)
+    const {api, sid, apiVersion, sfdcBaseUrl} = props
 
     const [objects, setObjects] = useState<string[]>([])
-    const [selectedIndex, setSelectedIndex] = useState<number>(0)
     const [errorMessage, setErrorMessage] = useState<string>('')
     const [objectOptions, setObjectOptions] = useState<Option[]>()
     const [describeResponse, setDescribeResponse] = useState<object>()
-    const [objectName, setObjectName] = useState<string>('')
-    const [api, setApi] = useState<SfdcApi>(props.api)
-    const [sid, setSid] = useState<string>(props.sid)
-    const [apiVersion, setApiVersion] = useState<string>(props.apiVersion)
-    const [sfdcBaseUrl, setSfdcBaseUrl] = useState<string>(props.sfdcBaseUrl)
-    const [soapEndpoint, setSoapEndpoint] = useState<string>(`${props.sfdcBaseUrl}/services/Soap/m/${props.apiVersion}`)
+    const [_objectName, setObjectName] = useState<string>('')
+    const [soapEndpoint] = useState<string>(`${props.sfdcBaseUrl}/services/Soap/m/${props.apiVersion}`)
+
+    const [tabValue, setTabValue] = useState<number>(0)
     
     useEffect(() => {
     if (sid) {
@@ -49,7 +66,7 @@ const Workbench: FunctionComponent<Props> = props => {
         }
     }, [sid, objects, api])
 
-    const fetchObjects = useCallback(async (apiVersionOverride?: string, sfdcBaseUrlOverride?: string) => {
+    const fetchObjects = useCallback(async (_event?: SyntheticEvent, apiVersionOverride?: string, sfdcBaseUrlOverride?: string) => {
         if (!objects || objects.length === 0) {
             NProgress.start()
             try {
@@ -67,9 +84,9 @@ const Workbench: FunctionComponent<Props> = props => {
         sfdcBaseUrl && api.setAxiosBaseURL(sfdcBaseUrl)
     }, [sfdcBaseUrl, api])
 
-    const shouldCollapse = useCallback((entry: any) => {
-        return entry.name !== objectName
-    }, [objectName])
+    // const shouldCollapse = useCallback((entry: any) => {
+    //     return entry.name !== objectName
+    // }, [objectName])
 
     const showObject = useCallback(async (object: string) => {
         setDescribeResponse(undefined)
@@ -99,27 +116,30 @@ const Workbench: FunctionComponent<Props> = props => {
         }
     }, [apiVersion])
 
-    return <IconSettings iconPath="/assets/icons"> 
-    <Container>
+    const handleChange = useCallback(async (e: SyntheticEvent, newValue: number) => {
+      setTabValue(newValue)
+    }, [])
+
+    return <div>
       <WorkbenchHeader sid={sid} sfdcBaseUrl={sfdcBaseUrl} signout={api.signout}/>
       <ErrorMessage>{errorMessage}</ErrorMessage>
-      {sid && <Tabs id="tabs-example-default" selectedIndex={selectedIndex} onSelect={(idx: number) => {
-        setSelectedIndex(idx)
-      }}>
-        <TabsPanel label="Standard and Custom Objects">
-          <Dropdown 
+      {sid && <div>
+      <Tabs id="tabs-example-default" value={tabValue} onChange={handleChange}>
+          <Tab label="Standard and Custom Objects"/>
+          <Tab label="SOQL Queries"/>
+          <Tab label="Record Editor"/>
+          <Tab label="Metadata"/>
+          <Tab label="Rest Explorer"/>
+        </Tabs>
+        <TabPanel index={0} value={tabValue}>
+          <Select 
             label="Objects" 
-            type="picklist" 
-            align="left"
-            iconCategory="utility"
-            iconName="down"
-            length="10"
-            iconPosition="right"
             onSelect={(o: any) => showObject(o.value)}
-            onOpen={fetchObjects}
-            options={objectOptions}/>
-        </TabsPanel>
-        <TabsPanel label="SOQL Queries">
+            onOpen={fetchObjects}>
+              {objectOptions?.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
+            </Select>
+        </TabPanel>
+        <TabPanel index={1} value={tabValue}>
           <SOQL runQuery={api.runQuery} 
             handleError={api.handleError} 
             setErrorMessage={setErrorMessage} 
@@ -129,8 +149,8 @@ const Workbench: FunctionComponent<Props> = props => {
             apiVersion={apiVersion} 
             sfdcBaseUrl={sfdcBaseUrl} 
             describeObject={api.describeObject}/>
-        </TabsPanel>
-        <TabsPanel label="Record Editor">
+        </TabPanel>
+        <TabPanel index={2} value={tabValue}>
           <RecordEditor updateRecord={api.updateRecord} 
             setErrorMessage={setErrorMessage} 
             setDescribeResponse={setDescribeResponse} 
@@ -138,8 +158,8 @@ const Workbench: FunctionComponent<Props> = props => {
             sfdcBaseUrl={sfdcBaseUrl} 
             describeObject={api.describeObject} 
             sendRest={api.sendRest}/>
-        </TabsPanel>
-        <TabsPanel label="Metadata">
+        </TabPanel>
+        <TabPanel index={3} value={tabValue}>
           <Metadata setObjectName={setObjectName} 
             setErrorMessage={setErrorMessage} 
             setDescribeResponse={setDescribeResponse} 
@@ -150,8 +170,8 @@ const Workbench: FunctionComponent<Props> = props => {
             sendDeployStatus={api.sendDeployStatus} 
             sendRetrieve={api.sendRetrieve} 
             sendRetrieveStatus={api.sendRetrieveStatus}/>
-        </TabsPanel>
-        <TabsPanel label="Rest Explorer">
+        </TabPanel>
+        <TabPanel index={4} value={tabValue}>
           <RestExplorer setErrorMessage={setErrorMessage} 
             setDescribeResponse={setDescribeResponse} 
             apiVersion={""} 
@@ -159,15 +179,10 @@ const Workbench: FunctionComponent<Props> = props => {
             handleError={api.handleError} 
             sendRest={api.sendRest} 
             postRest={api.postRest}/>
-        </TabsPanel>
-      </Tabs> || <Signin signin={api.signin} 
+        </TabPanel></div> || <Signin signin={api.signin} 
                     login={api.login}/>}
-      {describeResponse && <ReactJson 
-        name={objectName} 
-        shouldCollapse={shouldCollapse}
-        src={describeResponse}/>}
-    </Container>
-  </IconSettings>
+      <div>{JSON.stringify(describeResponse)}</div>
+    </div>
 }
 
 export default Workbench

@@ -1,9 +1,10 @@
-import { Button, IconSettings, Input, Radio, RadioGroup, Textarea } from "@salesforce/design-system-react"
 import { ChangeEvent, FunctionComponent, useCallback, useEffect, useState } from "react"
 import NProgress from 'nprogress'
 import styled from "styled-components"
 import React from "react"
 import { AdhocRestPayload, AdhocRestPostPayload } from "../types"
+import RadioGroup from "@mui/material/RadioGroup/RadioGroup"
+import { Button, FormControlLabel, Input, Radio, TextField } from "@mui/material"
 
 interface Props {
     setErrorMessage: (msg: string) => void
@@ -56,52 +57,44 @@ const RestExplorer: FunctionComponent<Props> = (props) => {
       }, [restEndpoint, httpMethod, body])
 
       
-    return <IconSettings iconPath="/assets/icons">
+    return <div>
         <PaddedDiv>
             <div className="slds-text-title_bold slds-form-element__label">HTTP Method</div>
             <RadioGroup
                 onChange={(event: any) => setHttpMethod(event.target.value)}
                 name="Type"
-                variant="button-group"
                 style={{border: 0}}
             >
-                <Radio
+                <FormControlLabel
+                    control={<Radio/>}
                     id="get"
                     value="get"
-                    defaultChecked="true"
-                    labels={{label: 'GET'}}>
-
-                </Radio>
-                <Radio
+                    label='GET'/>
+                <FormControlLabel
+                    control={<Radio></Radio>}
                     id="post"
                     value="post"
-                    labels={{label: 'POST'}}>
-
-                </Radio>
-                <Radio
+                    label='POST'/>
+                <FormControlLabel
+                    control={<Radio/>}
                     id="put"
                     value="put"
-                    labels={{label: 'PUT'}}>
-
-                </Radio>
-                <Radio
+                    label='PUT'/>
+                <FormControlLabel
+                    control={<Radio/>}
                     id="patch"
                     value="patch"
-                    labels={{label: 'PATCH'}}>
-
-                </Radio>
-                <Radio
+                    label='PATCH'/>
+                <FormControlLabel
+                    control={<Radio/>}
                     id="delete"
                     value="delete"
-                    labels={{label: 'DELETE'}}>
-
-                </Radio>
-                <Radio
+                    label='DELETE'/>
+                <FormControlLabel
+                    control={<Radio/>}
                     id="head"
                     value="head"
-                    labels={{label: 'HEAD'}}>
-
-                </Radio>
+                    label='HEAD'/>
             </RadioGroup>
         </PaddedDiv>
         <PaddedDiv>
@@ -110,10 +103,10 @@ const RestExplorer: FunctionComponent<Props> = (props) => {
         </PaddedDiv>
         {['post', 'put', 'patch'].filter(v => v === httpMethod).length > 0 && <PaddedDiv>
             <div className="slds-text-title_bold slds-form-element__label">Payload</div>
-            <Textarea onChange={(e: ChangeEvent<HTMLInputElement>) => setBody(e.target.value)}></Textarea>
+            <TextField onChange={(e: ChangeEvent<HTMLInputElement>) => setBody(e.target.value)}></TextField>
         </PaddedDiv>}
         <Button onClick={send}>Send</Button>
-    </IconSettings>
+    </div>
 }
 
 export default RestExplorer

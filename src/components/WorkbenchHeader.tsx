@@ -1,7 +1,7 @@
 import { FunctionComponent, useMemo } from "react";
 import styled from "styled-components";
-import { BrandBand, Button } from '@salesforce/design-system-react'
 import React from "react";
+import { Button } from "@mui/material";
 
 const Header = styled.div`
     display: flex;
@@ -21,18 +21,14 @@ const WorkbenchHeader: FunctionComponent<Props> = (props) => {
     }, [props.sid])
     
     return <div>
-        <BrandBand
-				id="brand-band-lightning-blue"
-				className="slds-p-around_small"
-				theme="lightning-blue"
-			>
+        <div>
             <Header className="slds-box slds-theme_default">
                 Workbench App
                 {props.sid && <div>OrgId: {orgId}</div>}
                 {props.sid && <div>Url: {props.sfdcBaseUrl}</div>}
-                {props.sid && <Button onClick={props.signout} label="Sign Out"/>}
+                {props.sid && <Button onClick={props.signout}>Signout</Button>}
             </Header>
-        </BrandBand>
+        </div>
     </div>
 }
 
