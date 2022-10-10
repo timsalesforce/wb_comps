@@ -21,10 +21,6 @@ export async function login(username: string, password: string, baseUrl: string,
 
 }
 
-export async function signout() : Promise<any> {
-
-}
-
 export async function describeGlobal(payload: BaseRestPayload) : Promise<any> {
     return {sobjects: [{name: "Account"}, {name: "Opportunity"}]}
 }

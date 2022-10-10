@@ -3,7 +3,8 @@ import {ChangeEvent, FunctionComponent, useCallback, useState} from 'react'
 import styled from 'styled-components'
 import NProgress from 'nprogress'
 import React from 'react'
-import { Button, Input } from '@mui/material'
+import { Button, TextField } from '@mui/material'
+import { H2 } from '../elements'
 
 const ErrorDiv = styled.div`
     color: red;
@@ -49,13 +50,13 @@ const Signin: FunctionComponent<Props> = (props) => {
 
   // ..
   return <Container>
-    <h1 className="slds-text-title_caps slds-p-vertical_medium">Sign In</h1>
+    <H2 className="slds-text-title_caps slds-p-vertical_medium">Sign In</H2>
     {errorMessage && <ErrorDiv>Signin failed: {errorMessage}</ErrorDiv>}
-    <Input className="slds-p-around_xxx-small" type="text" name="username" placeholder="Username" onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}></Input>
-    <Input className="slds-p-around_xxx-small" type="password" name="password" placeholder="Password" onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}></Input>
-    <Input className="slds-p-around_xxx-small" type="text" name="sid" placeholder="Session ID" onChange={(e: ChangeEvent<HTMLInputElement>) => setSid(e.target.value)}></Input>
-    <Input className="slds-p-around_xxx-small" type="text" name="base-url" placeholder="Instance URL" onChange={(e: ChangeEvent<HTMLInputElement>) => setBaseUrl(e.target.value)}></Input>
-    <Input className="slds-p-around_xxx-small" type="text" name="api-version" placeholder="API Version" onChange={(e: ChangeEvent<HTMLInputElement>) => setApiVersion(e.target.value)}></Input>
+    <TextField fullWidth name="username" placeholder="Username" onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}/>
+    <TextField fullWidth type="password" name="password" placeholder="Password" onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
+    <TextField fullWidth type="text" name="sid" placeholder="Session ID" onChange={(e: ChangeEvent<HTMLInputElement>) => setSid(e.target.value)}/>
+    <TextField fullWidth type="text" name="base-url" placeholder="Instance URL" onChange={(e: ChangeEvent<HTMLInputElement>) => setBaseUrl(e.target.value)}/>
+    <TextField fullWidth type="text" name="api-version" placeholder="API Version" onChange={(e: ChangeEvent<HTMLInputElement>) => setApiVersion(e.target.value)}/>
     <Button onClick={doSignin}>Sign In</Button>
   </Container>
 }

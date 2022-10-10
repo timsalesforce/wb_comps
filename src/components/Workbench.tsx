@@ -18,6 +18,11 @@ export interface Props {
     sfdcBaseUrl: string
 }
 
+const WorkbenchContainer = styled.div`
+  width: 90%;
+  margin: auto;
+`
+
 const ErrorMessage = styled.div`
   color: red;
 `
@@ -120,72 +125,75 @@ const Workbench: FunctionComponent<Props> = props => {
       setTabValue(newValue)
     }, [])
 
-    return <div>
+    return <div style={{width: "100%"}}>
       <WorkbenchHeader sid={sid} sfdcBaseUrl={sfdcBaseUrl} signout={api.signout}/>
-      <ErrorMessage>{errorMessage}</ErrorMessage>
-      {sid && <div>
-      <Tabs id="tabs-example-default" value={tabValue} onChange={handleChange}>
-          <Tab label="Standard and Custom Objects"/>
-          <Tab label="SOQL Queries"/>
-          <Tab label="Record Editor"/>
-          <Tab label="Metadata"/>
-          <Tab label="Rest Explorer"/>
-        </Tabs>
-        <TabPanel index={0} value={tabValue}>
-          <FormControl sx={{ m: 1, minWidth: 100 }}>
-          <InputLabel id="demo-simple-select-label">Objects</InputLabel>
-          <Select 
-            label="Objects"
-            onSelect={(o: any) => showObject(o.value)}
-            onOpen={fetchObjects}>
-              {objectOptions?.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
-            </Select>
-          </FormControl>
-        </TabPanel>
-        <TabPanel index={1} value={tabValue}>
-          <SOQL runQuery={api.runQuery} 
-            handleError={api.handleError} 
-            setErrorMessage={setErrorMessage} 
-            fetchObjects={fetchObjects} 
-            objects={objects} 
-            sid={sid} 
-            apiVersion={apiVersion} 
-            sfdcBaseUrl={sfdcBaseUrl} 
-            describeObject={api.describeObject}/>
-        </TabPanel>
-        <TabPanel index={2} value={tabValue}>
-          <RecordEditor updateRecord={api.updateRecord} 
-            setErrorMessage={setErrorMessage} 
-            setDescribeResponse={setDescribeResponse} 
-            apiVersion={apiVersion} 
-            sfdcBaseUrl={sfdcBaseUrl} 
-            describeObject={api.describeObject} 
-            sendRest={api.sendRest}/>
-        </TabPanel>
-        <TabPanel index={3} value={tabValue}>
-          <Metadata setObjectName={setObjectName} 
-            setErrorMessage={setErrorMessage} 
-            setDescribeResponse={setDescribeResponse} 
-            sid={sid} 
-            soapEndpoint={soapEndpoint} 
-            apiVersion={apiVersion} 
-            sendDeploy={api.sendDeploy} 
-            sendDeployStatus={api.sendDeployStatus} 
-            sendRetrieve={api.sendRetrieve} 
-            sendRetrieveStatus={api.sendRetrieveStatus}/>
-        </TabPanel>
-        <TabPanel index={4} value={tabValue}>
-          <RestExplorer setErrorMessage={setErrorMessage} 
-            setDescribeResponse={setDescribeResponse} 
-            apiVersion={""} 
-            sfdcBaseUrl={""} 
-            handleError={api.handleError} 
-            sendRest={api.sendRest} 
-            postRest={api.postRest}/>
-        </TabPanel></div> || <Signin signin={api.signin} 
-                    login={api.login}/>}
-      <div>{JSON.stringify(describeResponse)}</div>
+      <WorkbenchContainer>
+        <ErrorMessage>{errorMessage}</ErrorMessage>
+        {sid && <div>
+        <Tabs id="tabs-example-default" value={tabValue} onChange={handleChange}>
+            <Tab label="Standard and Custom Objects"/>
+            <Tab label="SOQL Queries"/>
+            <Tab label="Record Editor"/>
+            <Tab label="Metadata"/>
+            <Tab label="Rest Explorer"/>
+          </Tabs>
+          <TabPanel index={0} value={tabValue}>
+            <FormControl sx={{ m: 1, minWidth: 100 }}>
+            <InputLabel id="demo-simple-select-label">Objects</InputLabel>
+            <Select 
+              label="Objects"
+              onSelect={(o: any) => showObject(o.value)}
+              onOpen={fetchObjects}>
+                {objectOptions?.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
+              </Select>
+            </FormControl>
+          </TabPanel>
+          <TabPanel index={1} value={tabValue}>
+            <SOQL runQuery={api.runQuery} 
+              handleError={api.handleError} 
+              setErrorMessage={setErrorMessage} 
+              fetchObjects={fetchObjects} 
+              objects={objects} 
+              sid={sid} 
+              apiVersion={apiVersion} 
+              sfdcBaseUrl={sfdcBaseUrl} 
+              describeObject={api.describeObject}/>
+          </TabPanel>
+          <TabPanel index={2} value={tabValue}>
+            <RecordEditor updateRecord={api.updateRecord} 
+              setErrorMessage={setErrorMessage} 
+              setDescribeResponse={setDescribeResponse} 
+              apiVersion={apiVersion} 
+              sfdcBaseUrl={sfdcBaseUrl} 
+              describeObject={api.describeObject} 
+              sendRest={api.sendRest}/>
+          </TabPanel>
+          <TabPanel index={3} value={tabValue}>
+            <Metadata setObjectName={setObjectName} 
+              setErrorMessage={setErrorMessage} 
+              setDescribeResponse={setDescribeResponse} 
+              sid={sid} 
+              soapEndpoint={soapEndpoint} 
+              apiVersion={apiVersion} 
+              sendDeploy={api.sendDeploy} 
+              sendDeployStatus={api.sendDeployStatus} 
+              sendRetrieve={api.sendRetrieve} 
+              sendRetrieveStatus={api.sendRetrieveStatus}/>
+          </TabPanel>
+          <TabPanel index={4} value={tabValue}>
+            <RestExplorer setErrorMessage={setErrorMessage} 
+              setDescribeResponse={setDescribeResponse} 
+              apiVersion={""} 
+              sfdcBaseUrl={""} 
+              handleError={api.handleError} 
+              sendRest={api.sendRest} 
+              postRest={api.postRest}/>
+          </TabPanel></div> || <Signin signin={api.signin} 
+                      login={api.login}/>}
+        <div>{JSON.stringify(describeResponse)}</div>
+      </WorkbenchContainer>
     </div>
+
 }
 
 export default Workbench

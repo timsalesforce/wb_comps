@@ -24,6 +24,15 @@ export interface Props {
 const PaddedDiv = styled.div`
   padding: 1em 0;
 `
+const ParametersGrid = styled.div`
+    display: grid;
+    grid-template-columns: auto auto auto;
+`
+
+const RadioGrid = styled.div`
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+`
 
 const Deploy: FunctionComponent<Props> = props => {
     
@@ -126,111 +135,111 @@ const Deploy: FunctionComponent<Props> = props => {
             <Input name="zipFile" type="file" inputRef={setInputRef} onChange={changeHandler}/>
         </PaddedDiv>
         <PaddedDiv>
-        <div className="slds-text-title_bold slds-form-element__label">Parameters</div>
-            <FormControlLabel
-                label="Allow missing files"
-                control={<Checkbox></Checkbox>}
-                id="allowMissingFiles"
-                onChange={(_event: any, checked: boolean) => {
-                    setAllowMissingFiles(checked)
-                }}
-                checked={allowMissingFiles}
-            />
-            <FormControlLabel
-                id="autoUpdatePackage"
-                control={<Checkbox></Checkbox>}
-                label='Auto Update Package'
-                onChange={(_event: any, checked: boolean) => {
-                    setAutoUpdatePackage(checked)
-                }}
-                checked={autoUpdatePackage}
-            />
-            <FormControlLabel
-                id="checkOnly"
-                control={<Checkbox></Checkbox>}
-                label='Check Only'
-                onChange={(_event: any, checked: boolean) => {
-                    setCheckOnly(checked)
-                }}
-                checked={checkOnly}
-            />
-            <FormControlLabel
-                id="ignoreWarnings"
-                control={<Checkbox></Checkbox>}
-                label='Ignore Warnings'
-                onChange={(_event: any, checked: boolean) => {
-                    setIgnoreWarnings(checked)
-                }}
-                checked={ignoreWarnings}
-            />
-            <FormControlLabel
-                id="performRetrieve"
-                control={<Checkbox></Checkbox>}
-                label='Perform Retrieve'
-                onChange={(_event: any, checked: boolean) => {
-                    setPerformRetrieve(checked)
-                }}
-                checked={performRetrieve}
-            />
-            <FormControlLabel
-                id="purgeOnDelete"
-                control={<Checkbox></Checkbox>}
-                label='Purge On Delete'
-                onChange={(_event: any, checked: boolean) => {
-                    setPurgeOnDelete(checked)
-                }}
-                checked={purgeOnDelete}
-            />
-            <FormControlLabel
-                id="rollbackOnError"
-                control={<Checkbox></Checkbox>}
-                label='Rollback On Error'
-                onChange={(_event: any, checked: boolean) => {
-                    setRollbackOnError(checked)
-                }}
-                checked={rollbackOnError}
-            />
-            <FormControlLabel
-                id="singlePackage"
-                control={<Checkbox></Checkbox>}
-                label='Single Package'
-                onChange={(_event: any, checked: boolean) => {
-                    setSinglePackage(checked)
-                }}
-                checked={singlePackage}
-            />
+            <div>Parameters</div>
+            <ParametersGrid>
+                <FormControlLabel
+                    label="Allow missing files"
+                    control={<Checkbox></Checkbox>}
+                    id="allowMissingFiles"
+                    onChange={(_event: any, checked: boolean) => {
+                        setAllowMissingFiles(checked)
+                    }}
+                    checked={allowMissingFiles}
+                />
+                <FormControlLabel
+                    id="autoUpdatePackage"
+                    control={<Checkbox></Checkbox>}
+                    label='Auto Update Package'
+                    onChange={(_event: any, checked: boolean) => {
+                        setAutoUpdatePackage(checked)
+                    }}
+                    checked={autoUpdatePackage}
+                />
+                <FormControlLabel
+                    id="checkOnly"
+                    control={<Checkbox></Checkbox>}
+                    label='Check Only'
+                    onChange={(_event: any, checked: boolean) => {
+                        setCheckOnly(checked)
+                    }}
+                    checked={checkOnly}
+                />
+                <FormControlLabel
+                    id="ignoreWarnings"
+                    control={<Checkbox></Checkbox>}
+                    label='Ignore Warnings'
+                    onChange={(_event: any, checked: boolean) => {
+                        setIgnoreWarnings(checked)
+                    }}
+                    checked={ignoreWarnings}
+                />
+                <FormControlLabel
+                    id="performRetrieve"
+                    control={<Checkbox></Checkbox>}
+                    label='Perform Retrieve'
+                    onChange={(_event: any, checked: boolean) => {
+                        setPerformRetrieve(checked)
+                    }}
+                    checked={performRetrieve}
+                />
+                <FormControlLabel
+                    id="purgeOnDelete"
+                    control={<Checkbox></Checkbox>}
+                    label='Purge On Delete'
+                    onChange={(_event: any, checked: boolean) => {
+                        setPurgeOnDelete(checked)
+                    }}
+                    checked={purgeOnDelete}
+                />
+                <FormControlLabel
+                    id="rollbackOnError"
+                    control={<Checkbox></Checkbox>}
+                    label='Rollback On Error'
+                    onChange={(_event: any, checked: boolean) => {
+                        setRollbackOnError(checked)
+                    }}
+                    checked={rollbackOnError}
+                />
+                <FormControlLabel
+                    id="singlePackage"
+                    control={<Checkbox></Checkbox>}
+                    label='Single Package'
+                    onChange={(_event: any, checked: boolean) => {
+                        setSinglePackage(checked)
+                    }}
+                    checked={singlePackage}
+                />
+            </ParametersGrid>
         </PaddedDiv>
         <PaddedDiv>
-        <div className="slds-text-title_bold slds-form-element__label">Testing</div>
-          <div style={{display: 'flex'}}>
-            <RadioGroup
-                onChange={(event: any) => setTestLevel(event.target.value)}
-                name="Test Level"
-                style={{border: 0}}
-            >
-                <FormControlLabel
-                    control={<Radio></Radio>}
-                    id="NoTestRun"
-                    value="NoTestRun"
-                    checked={true}
-                    label='None'/>
-                <FormControlLabel
-                    control={<Radio></Radio>}
-                    id="RunLocalTests"
-                    value="RunLocalTests"
-                    label='Run Local'/>
-                <FormControlLabel
-                    control={<Radio></Radio>}
-                    id="RunAllTestsInOrg"
-                    value="RunAllTestsInOrg"
-                    label='Run All'/>
-                <FormControlLabel
-                    control={<Radio></Radio>}
-                    id="RunSpecifiedTests"
-                    value="RunSpecifiedTests"
-                    label='Run Specified'/>
-            </RadioGroup>
-            </div>
+        <div>Testing</div>
+                <RadioGroup
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => setTestLevel(event.target.value)}
+                    name="Test Level"
+                    style={{border: 0}}>
+                        <RadioGrid>
+                            <FormControlLabel
+                                control={<Radio></Radio>}
+                                id="NoTestRun"
+                                value="NoTestRun"
+                                label='None'/>
+                            <FormControlLabel
+                                control={<Radio></Radio>}
+                                id="RunLocalTests"
+                                value="RunLocalTests"
+                                label='Run Local'/>
+                            <FormControlLabel
+                                control={<Radio></Radio>}
+                                id="RunAllTestsInOrg"
+                                value="RunAllTestsInOrg"
+                                label='Run All'/>
+                            <FormControlLabel
+                                control={<Radio></Radio>}
+                                id="RunSpecifiedTests"
+                                value="RunSpecifiedTests"
+                                label='Run Specified'/>
+                        </RadioGrid>
+                </RadioGroup>
             {testLevel && testLevel === 'RunSpecifiedTests' && <Input type="text" placeholder="Run tests (comma separated)" onChange={(e: ChangeEvent<HTMLInputElement>) => setRunTests(e.target.value.split(','))}></Input>}
         </PaddedDiv>
         {zipFile && <Button onClick={deploy}>Deploy</Button>}

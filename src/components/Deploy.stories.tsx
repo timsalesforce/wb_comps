@@ -28,4 +28,4 @@ export const Primary: ComponentStory<typeof Deploy> = () => <Deploy setErrorMess
     throw new Error('Function not implemented.');
 } } sendDeployStatus={function (payload: DeployStatusPayload): Promise<any> {
     throw new Error('Function not implemented.');
-} } sid={''} soapEndpoint={''}>Button</Deploy>;
+} } sid={''} soapEndpoint={''}/>;

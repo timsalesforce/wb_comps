@@ -2,7 +2,7 @@ import Box from "@mui/material/Box/Box"
 import Tab from "@mui/material/Tab/Tab"
 import Tabs from "@mui/material/Tabs/Tabs"
 import Typography from "@mui/material/Typography/Typography"
-import React from "react"
+import React, { SyntheticEvent, useCallback } from "react"
 import {  FunctionComponent, useState } from "react"
 import styled from "styled-components"
 import { DeployPayload, DeployStatusPayload, RetrievePayload, RetrieveStatusPayload } from "../types"
@@ -57,17 +57,22 @@ const Metadata: FunctionComponent<Props> = props => {
         sendDeploy, sendDeployStatus, sendRetrieve, sendRetrieveStatus, apiVersion} = props
 
     const [status, setStatus] = useState<string>()
+    const [tabValue, setTabValue] = useState<number>(0)
 
+    const handleChange = useCallback(async (e: SyntheticEvent, newValue: number) => {
+      setTabValue(newValue)
+    }, [])
+    
     return <div>
         {status && <StatusMessage>{status}</StatusMessage>}
-        <Tabs>
+        <Tabs value={tabValue} onChange={handleChange}>
             <Tab label="Retrieve"/>
             <Tab label="Deploy"/>
         </Tabs>
-        <TabPanel index={0} value={0}>
+        <TabPanel index={0} value={tabValue}>
             <Retrieve sid={sid} soapEndpoint={soapEndpoint} sendRetrieve={sendRetrieve} sendRetrieveStatus={sendRetrieveStatus} apiVersion={apiVersion} setErrorMessage={setErrorMessage} setDescribeResponse={setDescribeResponse} setObjectName={props.setObjectName} setStatus={setStatus}/>
         </TabPanel>
-        <TabPanel index={1} value={1}>
+        <TabPanel index={1} value={tabValue}>
             <Deploy sid={sid} soapEndpoint={soapEndpoint} sendDeploy={sendDeploy} sendDeployStatus={sendDeployStatus} setErrorMessage={setErrorMessage} setDescribeResponse={setDescribeResponse} setStatus={setStatus} setObjectName={props.setObjectName}/>
         </TabPanel>
     </div>

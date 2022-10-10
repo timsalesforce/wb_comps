@@ -2,7 +2,8 @@ import { ChangeEvent, FunctionComponent, useCallback, useEffect, useState } from
 import { DescribeObjectPayload, QueryRecord, SObjectDescribeResult, SOQLQueryPayload } from '../types'
 import NProgress from 'nprogress'
 import React from "react"
-import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from "@mui/material"
+import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, TextField } from "@mui/material"
+import Select, { SelectChangeEvent } from "@mui/material/Select"
 
 interface Props {
     setErrorMessage: (message: string) => void
@@ -38,7 +39,7 @@ function getStyles(name: string, fields: string[]) {
 
 const SOQL: FunctionComponent<Props> = props => {
 
-    const {setErrorMessage, fetchObjects, objects, sid, apiVersion, sfdcBaseUrl,
+    const {setErrorMessage, fetchObjects, objects, apiVersion, sfdcBaseUrl,
         describeObject, handleError, runQuery} = props
 
     const [selectedObject, setSelectedObject] = useState<string>()
@@ -70,7 +71,7 @@ const SOQL: FunctionComponent<Props> = props => {
         }
     }, [apiVersion, sfdcBaseUrl])
 
-    const handleChange = useCallback(async (event: SelectChangeEvent) => {
+    const handleChange = useCallback(async (event: SelectChangeEvent<typeof selected>) => {
         const value = event.target.value
         setSelected(typeof value === 'string' ? value.split(',') : value)
     }, [])
@@ -99,19 +100,19 @@ const SOQL: FunctionComponent<Props> = props => {
                 label="Select an Object"
                 onOpen={fetchObjects}
                 onChange={(e: SelectChangeEvent) => populateFields(e.target.value)}>
-                    {objects.map(o => <MenuItem value={o}>{o}</MenuItem>)}
+                    {objects.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
             </Select>
         </FormControl>
         <FormControl sx={{ m: 1, width: 200 }}>
             <InputLabel>Select Fields</InputLabel>
             <Select
-                id="query-id"
                 multiple
+                displayEmpty
                 value={selected}
                 onChange={handleChange}
                 input={<OutlinedInput label="Select Fields"/>}
                 MenuProps={MenuProps}>
-                    {fields?.map((name) => (
+                    {fields.map((name) => (
                         <MenuItem
                             key={name}
                             value={name}
