@@ -31,8 +31,8 @@ function getStyles(name: string, fields: string[]) {
     return {
       fontWeight:
         fields.indexOf(name) === -1
-          ? "bolder"
-          : "",
+          ? ""
+          : "bold",
     };
   }
 
@@ -45,7 +45,7 @@ const SOQL: FunctionComponent<Props> = props => {
     const [fields, setFields] = useState<string[]>(['Id', 'Name'])
     const [selected, setSelected] = useState<string[]>([])
     const [query, setQuery] = useState<string>()
-    const [jsonResponse, _setJsonResponse] = useState<QueryRecord[]>()
+    const [jsonResponse, setJsonResponse] = useState<QueryRecord[]>()
 
     useEffect(() => {
         if (selected && selectedObject) {
@@ -57,8 +57,8 @@ const SOQL: FunctionComponent<Props> = props => {
     }, [selected, selectedObject])
 
     const populateFields = useCallback(async (object: string) => {
-        setSelectedObject(object)
         setSelected([])
+        setSelectedObject(object)
         try {
             NProgress.start()
             const describeResult: SObjectDescribeResult = await describeObject({object, apiVersion, sfdcBaseUrl})
@@ -98,7 +98,6 @@ const SOQL: FunctionComponent<Props> = props => {
             <Select 
                 label="Select an Object"
                 onOpen={fetchObjects}
-                value={selectedObject}
                 onChange={(e: SelectChangeEvent) => populateFields(e.target.value)}>
                     {objects.map(o => <MenuItem value={o}>{o}</MenuItem>)}
             </Select>
@@ -116,7 +115,7 @@ const SOQL: FunctionComponent<Props> = props => {
                         <MenuItem
                             key={name}
                             value={name}
-                            style={getStyles(name, fields)}>
+                            style={getStyles(name, selected)}>
                         {name}
                     </MenuItem>
                 ))}
@@ -133,15 +132,11 @@ const SOQL: FunctionComponent<Props> = props => {
         </TextField>
         <Button
             onClick={executeQuery}>Query</Button>
-         {/* <Button
+         <Button
             onClick={() => {
                 setJsonResponse(undefined)
-                setSelectedObject(undefined)
                 setSelected([])
-                setFields(undefined)
-            }}
-            label="Clear"
-        /> */}
+            }}>Clear</Button>
         <table>
             {jsonResponse && jsonResponse.length > 0 && jsonResponse[0].fields.map(f => <th>{f.name}</th>)}
             {jsonResponse?.map((r, idx) => <tr key={idx}>

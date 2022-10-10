@@ -52,7 +52,18 @@ export async function describeObject(payload: DescribeObjectPayload) : Promise<S
 }
 
 export async function runQuery(payload: SOQLQueryPayload) : Promise<any> {
-
+    return {
+        records: [
+            {
+                Id: '000000000000001',
+                Name: 'Testing 1'
+            },
+            {
+                Id: '000000000000002',
+                Name: 'Testing 2'
+            }
+        ]
+    }
 }
 
 export async function sendRetrieve(payload: RetrievePayload) : Promise<any> {
