@@ -26,7 +26,7 @@ export async function signout() : Promise<any> {
 }
 
 export async function describeGlobal(payload: BaseRestPayload) : Promise<any> {
-
+    return {sobjects: [{name: "Account"}, {name: "Opportunity"}]}
 }
 
 export async function sendRest(payload: AdhocRestPayload) : Promise<any> {
@@ -47,7 +47,7 @@ export async function describeObject(payload: DescribeObjectPayload) : Promise<S
         recordTypeInfos: [],
         supportedScopes: [],
         actionOverrides: [],
-        fields: []
+        fields: [{name: 'Id'}, {name: 'Name'}]
     }
 }
 

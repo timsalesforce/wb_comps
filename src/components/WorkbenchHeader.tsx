@@ -4,6 +4,11 @@ import React from "react";
 import { Button } from "@mui/material";
 
 const Header = styled.div`
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     display: flex;
     justify-content: space-around;
     padding: 1em; 

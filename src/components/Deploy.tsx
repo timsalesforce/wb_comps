@@ -10,7 +10,7 @@ import RadioGroup from "@mui/material/RadioGroup/RadioGroup"
 import Radio from "@mui/material/Radio/Radio"
 import Button from "@mui/material/Button/Button"
 
-interface Props {
+export interface Props {
     setErrorMessage: (message: string) => void
     setDescribeResponse: (response: any) => void
     setStatus: (staus?: string) => void

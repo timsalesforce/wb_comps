@@ -9,9 +9,9 @@ import Signin from "./Signin"
 import SOQL from "./SOQL"
 import styled from "styled-components"
 import WorkbenchHeader from "./WorkbenchHeader"
-import { Box, MenuItem, Select, Tab, Tabs, Typography } from "@mui/material"
+import { Box, FormControl, InputLabel, MenuItem, Select, Tab, Tabs, Typography } from "@mui/material"
 
-interface Props {
+export interface Props {
     api: SfdcApi
     sid: string
     apiVersion: string
@@ -132,12 +132,15 @@ const Workbench: FunctionComponent<Props> = props => {
           <Tab label="Rest Explorer"/>
         </Tabs>
         <TabPanel index={0} value={tabValue}>
+          <FormControl sx={{ m: 1, minWidth: 100 }}>
+          <InputLabel id="demo-simple-select-label">Objects</InputLabel>
           <Select 
-            label="Objects" 
+            label="Objects"
             onSelect={(o: any) => showObject(o.value)}
             onOpen={fetchObjects}>
               {objectOptions?.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
             </Select>
+          </FormControl>
         </TabPanel>
         <TabPanel index={1} value={tabValue}>
           <SOQL runQuery={api.runQuery} 
