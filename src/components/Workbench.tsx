@@ -37,6 +37,7 @@ function TabPanel(props: TabPanelProps) {
 
   return (
     <div
+      style={{maxWidth: '1024px', margin: 'auto'}}
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -130,21 +131,21 @@ const Workbench: FunctionComponent<Props> = props => {
       <WorkbenchContainer>
         <ErrorMessage>{errorMessage}</ErrorMessage>
         {sid && <div>
-        <Tabs id="tabs-example-default" value={tabValue} onChange={handleChange}>
-            <Tab label="Standard and Custom Objects"/>
-            <Tab label="SOQL Queries"/>
-            <Tab label="Record Editor"/>
-            <Tab label="Metadata"/>
-            <Tab label="Rest Explorer"/>
+        <Tabs value={tabValue} onChange={handleChange} centered>
+            <Tab label="Standard and Custom Objects" style={{ padding: '0 3em' }}/>
+            <Tab label="SOQL Queries" style={{ padding: '0 3em' }}/>
+            <Tab label="Record Editor" style={{ padding: '0 3em' }}/>
+            <Tab label="Metadata" style={{ padding: '0 3em' }}/>
+            <Tab label="Rest Explorer" style={{ padding: '0 3em' }}/>
           </Tabs>
           <TabPanel index={0} value={tabValue}>
             <FormControl sx={{ m: 1, minWidth: 100 }}>
-            <InputLabel id="demo-simple-select-label">Objects</InputLabel>
-            <Select 
-              label="Objects"
-              onSelect={(o: any) => showObject(o.value)}
-              onOpen={fetchObjects}>
-                {objectOptions?.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
+              <InputLabel id="demo-simple-select-label">Objects</InputLabel>
+              <Select 
+                label="Objects"
+                onSelect={(o: any) => showObject(o.value)}
+                onOpen={fetchObjects}>
+                  {objectOptions?.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
               </Select>
             </FormControl>
           </TabPanel>

@@ -2,7 +2,7 @@ import { FunctionComponent, useMemo } from "react";
 import styled from "styled-components";
 import React from "react";
 import { Button } from "@mui/material";
-import { H2, H3 } from "../elements";
+import { H3 } from "../elements";
 
 const Header = styled.div`
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -11,9 +11,14 @@ const Header = styled.div`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     padding: 1em;
     align-items: flex-end;
+`
+
+const SessionDetail = styled.div`
+    padding: 0 1em;
+    font-size: small;
 `
 
 interface Props {
@@ -29,11 +34,13 @@ const WorkbenchHeader: FunctionComponent<Props> = (props) => {
     
     return <div>
         <div>
-            <Header className="slds-box slds-theme_default">
-                <div>{props.sid && <div>OrgId: {orgId}</div>}</div>
+            <Header>
                 <H3>Workbench App</H3>
-                <div>{props.sid && <div>Url: {props.sfdcBaseUrl}</div>}</div>
-                <div>{props.sid && props.signout && <Button onClick={props.signout}>Signout</Button>}</div>
+            </Header>
+            <Header>
+                <SessionDetail>{props.sid && <div>OrgId: {orgId}</div>}</SessionDetail>
+                <SessionDetail>{props.sid && <div>Url: {props.sfdcBaseUrl}</div>}</SessionDetail>
+                <SessionDetail>{props.sid && props.signout && <Button onClick={props.signout}>Signout</Button>}</SessionDetail>
             </Header>
         </div>
     </div>
