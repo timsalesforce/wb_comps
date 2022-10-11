@@ -3,8 +3,8 @@ import NProgress from 'nprogress'
 import { AdhocRestPayload, DescribeObjectPayload, SObjectDescribeResult, UpdateRecordPayload } from "../types"
 import InputElement from "./InputElement"
 import React from "react"
-import Input from "@mui/material/Input/Input"
 import Button from "@mui/material/Button/Button"
+import { TextField } from "@mui/material"
 
 
 interface Props {
@@ -103,8 +103,8 @@ const RecordEditor: FunctionComponent<Props> = (props) => {
     }, [entityFields])
 
     return <div>
-        <Input type="text" name="entity-type" placeholder="Entity Type" onChange={(e: ChangeEvent<HTMLInputElement>) => setEntityType(e.target.value)}/>
-        <Input type="text" name="record-id" placeholder="Record ID" onChange={(e: ChangeEvent<HTMLInputElement>) => setRecordId(e.target.value)}/>
+        <TextField fullWidth name="entity-type" placeholder="Entity Type" onChange={(e: ChangeEvent<HTMLInputElement>) => setEntityType(e.target.value)}/>
+        <TextField fullWidth name="record-id" placeholder="Record ID" onChange={(e: ChangeEvent<HTMLInputElement>) => setRecordId(e.target.value)}/>
         <Button onClick={fetch}>Fetch Record</Button>
         {Object.keys(newRecord).length > 0 && <Button onClick={_updateRecord}>Save</Button>}
         {Object.entries(record).filter(f => 
