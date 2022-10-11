@@ -3,7 +3,7 @@ import NProgress from 'nprogress'
 import { NameAndMembers, RetrievePayload, RetrieveStatusPayload } from "../types"
 import styled from "styled-components"
 import React from "react"
-import { Button, Checkbox, FormControlLabel, Input, Radio, RadioGroup } from "@mui/material"
+import { Button, Checkbox, FormControlLabel, Input, Radio, RadioGroup, TextField } from "@mui/material"
 
 interface Props {
     setErrorMessage: (message: string) => void
@@ -32,9 +32,9 @@ const PaddedDiv = styled.div`
 const NameAndMemberComponent: FunctionComponent<NMProps> = props => {
   const {index, setName, setMembers} = props
 
-  return <div>
-    <Input type="text" name="name" placeholder="Metadata Type" value={props.name} onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value, index)}/>
-    <Input type="text" name="members" placeholder="Members (comma separated)" value={props.members} onChange={(e: ChangeEvent<HTMLInputElement>) => setMembers(e.target.value, index)}/>
+  return <div style={{padding: '0.25em 0'}}>
+    <TextField fullWidth name="name" placeholder="Metadata Type" value={props.name} onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value, index)}/>
+    <TextField fullWidth name="members" placeholder="Members (comma separated)" value={props.members} onChange={(e: ChangeEvent<HTMLInputElement>) => setMembers(e.target.value, index)}/>
   </div>
 }
 
@@ -163,10 +163,12 @@ const Retrieve: FunctionComponent<Props> = props => {
     return <div>
         <PaddedDiv>
           <RadioGroup
+              defaultValue="file"
               onChange={(event: any) => setRetrieveType(event.target.value)}
               name="Type"
             >
             <FormControlLabel
+              defaultChecked={true}
               control={<Radio/>}
               id="file"
               value="file"
@@ -189,7 +191,7 @@ const Retrieve: FunctionComponent<Props> = props => {
         </PaddedDiv>
         <PaddedDiv>
           <legend className="slds-form-element__legend slds-form-element__label">Parameters</legend>
-          <Input type="text" placeholder="Package names (comma sep)" onChange={(e: ChangeEvent<HTMLInputElement>) => setPackageNames(e.target.value.split(','))}></Input>
+          <TextField fullWidth placeholder="Package names (comma sep)" value={packageNames} onChange={(e: ChangeEvent<HTMLInputElement>) => setPackageNames(e.target.value.split(','))}></TextField>
           <FormControlLabel
                 control={<Checkbox/>}
                 id="singlePackage"

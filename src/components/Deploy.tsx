@@ -3,12 +3,12 @@ import NProgress from 'nprogress'
 import styled from "styled-components"
 import { DeployPayload, DeployStatusPayload } from "../types/index"
 import React from "react"
-import Input from "@mui/material/Input/Input"
 import Checkbox from "@mui/material/Checkbox/Checkbox"
 import FormControlLabel from "@mui/material/FormControlLabel/FormControlLabel"
 import RadioGroup from "@mui/material/RadioGroup/RadioGroup"
 import Radio from "@mui/material/Radio/Radio"
 import Button from "@mui/material/Button/Button"
+import { TextField, Input } from "@mui/material"
 
 export interface Props {
     setErrorMessage: (message: string) => void
@@ -214,6 +214,7 @@ const Deploy: FunctionComponent<Props> = props => {
         <PaddedDiv>
         <div>Testing</div>
                 <RadioGroup
+                    defaultValue="NoTestRun"
                     onChange={(event: ChangeEvent<HTMLInputElement>) => setTestLevel(event.target.value)}
                     name="Test Level"
                     style={{border: 0}}>
@@ -240,7 +241,7 @@ const Deploy: FunctionComponent<Props> = props => {
                                 label='Run Specified'/>
                         </RadioGrid>
                 </RadioGroup>
-            {testLevel && testLevel === 'RunSpecifiedTests' && <Input type="text" placeholder="Run tests (comma separated)" onChange={(e: ChangeEvent<HTMLInputElement>) => setRunTests(e.target.value.split(','))}></Input>}
+            {testLevel && testLevel === 'RunSpecifiedTests' && <TextField fullWidth placeholder="Run tests (comma separated)" onChange={(e: ChangeEvent<HTMLInputElement>) => setRunTests(e.target.value.split(','))}/>}
         </PaddedDiv>
         {zipFile && <Button onClick={deploy}>Deploy</Button>}
         <Button onClick={clear}>Clear</Button>
