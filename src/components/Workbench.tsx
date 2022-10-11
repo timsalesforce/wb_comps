@@ -37,7 +37,7 @@ function TabPanel(props: TabPanelProps) {
 
   return (
     <div
-      style={{maxWidth: '1024px', margin: 'auto'}}
+      style={{maxWidth: '1080px', margin: 'auto'}}
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -139,7 +139,7 @@ const Workbench: FunctionComponent<Props> = props => {
             <Tab label="Rest Explorer" style={{ padding: '0 3em' }}/>
           </Tabs>
           <TabPanel index={0} value={tabValue}>
-            <FormControl sx={{ m: 1, minWidth: 100 }}>
+            <FormControl sx={{ m: 0, minWidth: 100 }}>
               <InputLabel id="demo-simple-select-label">Objects</InputLabel>
               <Select 
                 label="Objects"

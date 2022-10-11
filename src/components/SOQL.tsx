@@ -94,7 +94,7 @@ const SOQL: FunctionComponent<Props> = props => {
     }, [query, apiVersion, sfdcBaseUrl])
 
     return <div>
-        <FormControl sx={{ m: 1, minWidth: 200 }}>
+        <FormControl sx={{ m: 0, minWidth: 200 }}>
             <InputLabel>Select an Object</InputLabel>
             <Select 
                 label="Select an Object"
@@ -103,7 +103,7 @@ const SOQL: FunctionComponent<Props> = props => {
                     {objects.map(o => <MenuItem key={o} value={o}>{o}</MenuItem>)}
             </Select>
         </FormControl>
-        <FormControl sx={{ m: 1, width: 200 }}>
+        <FormControl sx={{ m: 0, width: 200 }}>
             <InputLabel>Select Fields</InputLabel>
             <Select
                 multiple
@@ -123,6 +123,7 @@ const SOQL: FunctionComponent<Props> = props => {
             </Select>
         </FormControl>
         <TextField fullWidth
+            style={{margin: '2em 0'}}
             label="Query"
             multiline
             maxRows={3}
