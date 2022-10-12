@@ -36,6 +36,7 @@
     "@storybook/manager-webpack5": "^6.5.12",
     "@storybook/react": "^6.5.12",
     "@storybook/testing-library": "^0.0.13",
+    "@textea/json-viewer": "^2.9.1",
     "@types/node": "^18.8.0",
     "@types/nprogress": "^0.2.0",
     "@types/react": "^18.0.21",
@@ -54,13 +55,11 @@
     "@mui/styled-engine": "^5.10.8",
     "@mui/styled-engine-sc": "^5.10.6",
     "axios": "^1.1.2",
+    "fast-xml-parser": "^4.0.11",
     "nprogress": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-xml-parser": "^1.1.8",
-    "styled-components": "^5.3.6",
-    "fast-xml-parser": "^4.0.11"
-  },
-  "dependencies": {
+    "styled-components": "^5.3.6"
   }
 }

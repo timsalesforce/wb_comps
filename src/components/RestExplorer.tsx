@@ -4,6 +4,7 @@ import styled from "styled-components"
 import React from "react"
 import { AdhocRestPayload, AdhocRestPostPayload } from "../types"
 import { Button, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/material"
+import { JsonViewer } from '@textea/json-viewer'
 
 interface Props {
     setErrorMessage: (msg: string) => void
@@ -113,7 +114,7 @@ const RestExplorer: FunctionComponent<Props> = (props) => {
             <TextField fullWidth onChange={(e: ChangeEvent<HTMLInputElement>) => setBody(e.target.value)}></TextField>
         </PaddedDiv>}
         <Button onClick={send}>Send</Button>
-        <div>{JSON.stringify(apiResponse)}</div>
+        <JsonViewer value={apiResponse}/>
     </div>
 }
 

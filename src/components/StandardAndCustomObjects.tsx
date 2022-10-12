@@ -1,7 +1,8 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material"
 import React, { FunctionComponent, useCallback, useState } from "react"
 import NProgress from 'nprogress'
 import { DescribeObjectPayload, SObjectDescribeResult } from "../types"
+import { JsonViewer } from '@textea/json-viewer'
 
 interface Props {
     objects: string[]
@@ -47,10 +48,10 @@ const StandardAndCustomObjects: FunctionComponent<Props> = (props) => {
         <InputLabel>Objects</InputLabel>
         <Select 
             label="Objects"
-            onSelect={(o: any) => showObject(o.value)}>
+            onChange={(e: SelectChangeEvent) => showObject(e.target.value)}>
                 {objects.map(o => <MenuItem value={o}>{o}</MenuItem>)}
         </Select>
-        <div>{JSON.stringify(apiResponse)}</div>
+        <JsonViewer value={apiResponse}/>
     </FormControl>
 }
 

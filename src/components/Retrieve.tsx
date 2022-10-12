@@ -4,6 +4,7 @@ import { NameAndMembers, RetrievePayload, RetrieveStatusPayload } from "../types
 import styled from "styled-components"
 import React from "react"
 import { Button, Checkbox, FormControlLabel, Input, Radio, RadioGroup, TextField } from "@mui/material"
+import { JsonViewer } from '@textea/json-viewer'
 
 interface Props {
     setErrorMessage: (message: string) => void
@@ -208,7 +209,7 @@ const Retrieve: FunctionComponent<Props> = props => {
         <Button onClick={clear}>Clear</Button>
         {retrieveDone && !zipFile && <Button onClick={downloadZip}>Fetch Zip</Button>}
         {zipFile && <a download href={`data:application/zip;base64,${zipFile}`}>Download</a>}
-        <div>{JSON.stringify(apiResponse)}</div>
+        <JsonViewer value={apiResponse}/>
     </div>
 }
 

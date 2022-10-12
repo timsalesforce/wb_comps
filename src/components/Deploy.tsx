@@ -9,6 +9,7 @@ import RadioGroup from "@mui/material/RadioGroup/RadioGroup"
 import Radio from "@mui/material/Radio/Radio"
 import Button from "@mui/material/Button/Button"
 import { TextField, Input } from "@mui/material"
+import { JsonViewer } from '@textea/json-viewer'
 
 export interface Props {
     setErrorMessage: (message: string) => void
@@ -246,7 +247,7 @@ const Deploy: FunctionComponent<Props> = props => {
         </PaddedDiv>
         {zipFile && <Button onClick={deploy}>Deploy</Button>}
         <Button onClick={clear}>Clear</Button>
-        <div>{JSON.stringify(apiResponse)}</div>
+        <JsonViewer value={apiResponse}/>
     </div>
 }
 
