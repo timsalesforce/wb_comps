@@ -98,7 +98,7 @@ const Workbench: FunctionComponent<Props> = props => {
         api.setAxiosAuthHeader(sid)
         fetchObjects()
       }
-    }, [sid, api])
+    }, [sid, api, sfdcBaseUrl])
 
     useEffect(() => {
       props.middleUrl && api.setAxiosBaseURL(props.middleUrl)
