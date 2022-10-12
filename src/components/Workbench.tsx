@@ -96,13 +96,10 @@ const Workbench: FunctionComponent<Props> = props => {
     useEffect(() => {
       if (sid) {
         api.setAxiosAuthHeader(sid)
+        api.setAxiosBaseURL(middleUrl || sfdcBaseUrl)
         fetchObjects()
       }
-    }, [sid, api, sfdcBaseUrl])
-
-    useEffect(() => {
-      props.middleUrl && api.setAxiosBaseURL(props.middleUrl)
-    }, [props.middleUrl])
+    }, [sid, api, sfdcBaseUrl, middleUrl])
 
     const fetchObjects = useCallback(async (_event?: SyntheticEvent, apiVersionOverride?: string, sfdcBaseUrlOverride?: string) => {
         if (!objects || objects.length === 0) {
@@ -117,10 +114,6 @@ const Workbench: FunctionComponent<Props> = props => {
             }
         }
     }, [objects, apiVersion, sfdcBaseUrl, api])
-
-    useEffect(() => {
-        api.setAxiosBaseURL(middleUrl || sfdcBaseUrl)
-    }, [sfdcBaseUrl, middleUrl, api])
 
     const handleChange = useCallback(async (e: SyntheticEvent, newValue: number) => {
       setTabValue(newValue)
