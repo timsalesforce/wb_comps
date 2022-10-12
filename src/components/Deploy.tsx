@@ -248,7 +248,7 @@ const Deploy: FunctionComponent<Props> = props => {
         </PaddedDiv>
         {zipFile && <Button onClick={deploy}>Deploy</Button>}
         <Button onClick={clear}>Clear</Button>
-        <JsonViewer value={apiResponse}/>
+        <JsonViewer rootName="Deploy" defaultInspectDepth={1} value={apiResponse}/>
     </div>
 }
 

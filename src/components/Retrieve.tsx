@@ -213,7 +213,7 @@ const Retrieve: FunctionComponent<Props> = props => {
         <Button onClick={clear}>Clear</Button>
         {retrieveDone && !zipFile && <Button onClick={downloadZip}>Fetch Zip</Button>}
         {zipFile && <a download href={`data:application/zip;base64,${zipFile}`}>Download</a>}
-        <JsonViewer value={apiResponse}/>
+        <JsonViewer rootName="Retrieve" defaultInspectDepth={1} value={apiResponse}/>
     </div>
 }
 

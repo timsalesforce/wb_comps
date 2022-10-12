@@ -116,6 +116,7 @@ const Workbench: FunctionComponent<Props> = props => {
     }, [objects, apiVersion, sfdcBaseUrl, api])
 
     const handleChange = useCallback(async (e: SyntheticEvent, newValue: number) => {
+      setErrorMessage('')
       setTabValue(newValue)
     }, [])
 

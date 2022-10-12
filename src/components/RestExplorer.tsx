@@ -115,7 +115,7 @@ const RestExplorer: FunctionComponent<Props> = (props) => {
             <TextField fullWidth onChange={(e: ChangeEvent<HTMLInputElement>) => setBody(e.target.value)}></TextField>
         </PaddedDiv>}
         <Button onClick={send}>Send</Button>
-        <JsonViewer value={apiResponse}/>
+        <JsonViewer defaultInspectDepth={1} value={apiResponse}/>
     </div>
 }
 

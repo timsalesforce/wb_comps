@@ -52,7 +52,7 @@ const StandardAndCustomObjects: FunctionComponent<Props> = (props) => {
             onChange={(e: SelectChangeEvent) => showObject(e.target.value)}>
                 {objects.map(o => <MenuItem value={o}>{o}</MenuItem>)}
         </Select>
-        <JsonViewer value={apiResponse}/>
+        <JsonViewer rootName="Information" defaultInspectDepth={1} value={apiResponse}/>
     </FormControl>
 }
 
