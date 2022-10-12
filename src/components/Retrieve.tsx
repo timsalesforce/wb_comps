@@ -78,11 +78,13 @@ const Retrieve: FunctionComponent<Props> = props => {
       }, [retrieveId])
     
     const downloadZip = useCallback(async () => {
+        setErrorMessage('')
         const response = await props.sendRetrieveStatus({id: retrieveId!, includeZip: true, sessionId: props.sid, soapEndpoint: props.soapEndpoint})
         setZipFile(response.result.zipFile)
     }, [retrieveId])
 
     const retrieve = useCallback(async () => {
+        setErrorMessage('')
         setRetrieveId(undefined)
         setZipFile(undefined)
         setRetrieveDone(false)
@@ -129,6 +131,7 @@ const Retrieve: FunctionComponent<Props> = props => {
     }, [metadataTypes, props.soapEndpoint, props.sid, packageNames])
 
     const clear = useCallback(async () => {
+      setErrorMessage('')
       setApiResponse(undefined)
       setMetadataTypes([{name: '', members: []}])
       setRetrieveDone(false)
@@ -140,6 +143,7 @@ const Retrieve: FunctionComponent<Props> = props => {
     }, [inputRef])
 
     const fileChangeHandler = useCallback(async (event: ChangeEvent<HTMLInputElement>) => {
+      setErrorMessage('')
       if (event.target.files && event.target.files.length > 0) {
         setPackageFile(event.target.files[0])
         const _metadataTypes: NameAndMembers[] = []

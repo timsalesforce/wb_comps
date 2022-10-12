@@ -113,6 +113,7 @@ const Deploy: FunctionComponent<Props> = props => {
     }, [zipFile, allowMissingFiles, autoUpdatePackage, ignoreWarnings, checkOnly, performRetrieve, purgeOnDelete, rollbackOnError, singlePackage, runTests, testLevel])
 
     const clear = useCallback(async () => {
+        setErrorMessage('')
         setApiResponse(undefined)
         setDeployId(undefined)
         setZipFile(undefined)

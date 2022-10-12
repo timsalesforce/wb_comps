@@ -26,12 +26,14 @@ export interface Props {
 
 const WorkbenchContainer = styled.div`
   width: 90%;
+  max-width: 1080px;
   margin: auto;
 `
 
 const ErrorMessage = styled.div`
   color: red;
 `
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;

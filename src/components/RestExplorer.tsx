@@ -39,6 +39,7 @@ const RestExplorer: FunctionComponent<Props> = (props) => {
     }, [props.apiVersion])
 
     const send = useCallback(async () => {
+        setErrorMessage('')
         NProgress.start()
         try {
             let apiResponse

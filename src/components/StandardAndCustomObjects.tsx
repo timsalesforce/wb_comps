@@ -18,6 +18,7 @@ const StandardAndCustomObjects: FunctionComponent<Props> = (props) => {
     const [apiResponse, setApiResponse] = useState<object>()
 
     const showObject = useCallback(async (object: string) => {
+        setErrorMessage('')
         setApiResponse(undefined)
         NProgress.start()
         try {
