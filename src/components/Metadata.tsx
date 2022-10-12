@@ -11,7 +11,6 @@ import Retrieve from "./Retrieve"
 
 interface Props {
     setErrorMessage: (message: string) => void
-    setDescribeResponse: (response: any) => void
     setObjectName: (name: string) => void
     sid: string
     soapEndpoint: string
@@ -53,7 +52,7 @@ interface TabPanelProps {
   }
   
 const Metadata: FunctionComponent<Props> = props => {
-    const {setErrorMessage, setDescribeResponse, sid, soapEndpoint,
+    const {setErrorMessage, sid, soapEndpoint,
         sendDeploy, sendDeployStatus, sendRetrieve, sendRetrieveStatus, apiVersion} = props
 
     const [status, setStatus] = useState<string>()
@@ -70,10 +69,10 @@ const Metadata: FunctionComponent<Props> = props => {
             <Tab label="Deploy"/>
         </Tabs>
         <TabPanel index={0} value={tabValue}>
-            <Retrieve sid={sid} soapEndpoint={soapEndpoint} sendRetrieve={sendRetrieve} sendRetrieveStatus={sendRetrieveStatus} apiVersion={apiVersion} setErrorMessage={setErrorMessage} setDescribeResponse={setDescribeResponse} setObjectName={props.setObjectName} setStatus={setStatus}/>
+            <Retrieve sid={sid} soapEndpoint={soapEndpoint} sendRetrieve={sendRetrieve} sendRetrieveStatus={sendRetrieveStatus} apiVersion={apiVersion} setErrorMessage={setErrorMessage} setObjectName={props.setObjectName} setStatus={setStatus}/>
         </TabPanel>
         <TabPanel index={1} value={tabValue}>
-            <Deploy sid={sid} soapEndpoint={soapEndpoint} sendDeploy={sendDeploy} sendDeployStatus={sendDeployStatus} setErrorMessage={setErrorMessage} setDescribeResponse={setDescribeResponse} setStatus={setStatus} setObjectName={props.setObjectName}/>
+            <Deploy sid={sid} soapEndpoint={soapEndpoint} sendDeploy={sendDeploy} sendDeployStatus={sendDeployStatus} setErrorMessage={setErrorMessage} setStatus={setStatus} setObjectName={props.setObjectName}/>
         </TabPanel>
     </div>
 }

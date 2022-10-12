@@ -7,7 +7,6 @@ import { Button, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/mat
 
 interface Props {
     setErrorMessage: (msg: string) => void
-    setDescribeResponse: (res: object) => void
     apiVersion: string
     sfdcBaseUrl: string
     handleError: (message: string) => string
@@ -27,10 +26,12 @@ const RadioGrid = styled.div`
 const RestExplorer: FunctionComponent<Props> = (props) => {
 
     // const {api, apiVersion, sfdcBaseUrl} = useContext(SessionContext)
-    const {setErrorMessage, setDescribeResponse} = props
+    const {setErrorMessage} = props
     const [restEndpoint, setRestEndpoint] = useState<string>(`/services/data/v${props.apiVersion}`)
-    const [httpMethod, setHttpMethod] = useState<string>()
+    const [httpMethod, setHttpMethod] = useState<string>('get')
     const [body, setBody] = useState<string>('')
+
+    const [apiResponse, setApiResponse] = useState<object>()
     
     useEffect(() => {
         setRestEndpoint(`/services/data/v${props.apiVersion}`)
@@ -39,20 +40,20 @@ const RestExplorer: FunctionComponent<Props> = (props) => {
     const send = useCallback(async () => {
         NProgress.start()
         try {
-            let describeResponse
+            let apiResponse
             switch(httpMethod) {
                 case 'get':
                 case 'head':
                 case 'delete':
-                    describeResponse = await props.sendRest({endpoint: restEndpoint, apiVersion: props.apiVersion, sfdcBaseUrl: props.sfdcBaseUrl, verb: httpMethod})
+                    apiResponse = await props.sendRest({endpoint: restEndpoint, apiVersion: props.apiVersion, sfdcBaseUrl: props.sfdcBaseUrl, verb: httpMethod})
                     break
                 case 'post':
                 case 'patch':
                 case 'put':
-                    describeResponse = await props.postRest({body, endpoint: restEndpoint, apiVersion: props.apiVersion, sfdcBaseUrl: props.sfdcBaseUrl, verb: httpMethod})
+                    apiResponse = await props.postRest({body, endpoint: restEndpoint, apiVersion: props.apiVersion, sfdcBaseUrl: props.sfdcBaseUrl, verb: httpMethod})
                     break
             }
-          setDescribeResponse(describeResponse)
+          setApiResponse(apiResponse)
         } catch (error: any) {
           setErrorMessage(props.handleError(error))
         } finally {
@@ -65,6 +66,7 @@ const RestExplorer: FunctionComponent<Props> = (props) => {
         <PaddedDiv>
             <div>HTTP Method</div>
             <RadioGroup
+                defaultValue="get"
                 onChange={(event: ChangeEvent<HTMLInputElement>) => setHttpMethod(event.target.value)}
                 name="Type"
                 style={{border: 0}}>
@@ -111,6 +113,7 @@ const RestExplorer: FunctionComponent<Props> = (props) => {
             <TextField fullWidth onChange={(e: ChangeEvent<HTMLInputElement>) => setBody(e.target.value)}></TextField>
         </PaddedDiv>}
         <Button onClick={send}>Send</Button>
+        <div>{JSON.stringify(apiResponse)}</div>
     </div>
 }
 

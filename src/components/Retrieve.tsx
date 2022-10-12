@@ -7,7 +7,6 @@ import { Button, Checkbox, FormControlLabel, Input, Radio, RadioGroup, TextField
 
 interface Props {
     setErrorMessage: (message: string) => void
-    setDescribeResponse: (response: any) => void
     setObjectName: (name: string) => void
     setStatus: (staus?: string) => void
     sendRetrieve: (payload: RetrievePayload) => Promise<any>
@@ -40,7 +39,7 @@ const NameAndMemberComponent: FunctionComponent<NMProps> = props => {
 
 const Retrieve: FunctionComponent<Props> = props => {
     
-    const {setErrorMessage, setDescribeResponse, setStatus} = props
+    const {setErrorMessage, setStatus} = props
 
     const [metadataTypes, setMetadataTypes] = useState<NameAndMembers[]>([{name: '', members: []}])
     const [retrieveId, setRetrieveId] = useState<string>()
@@ -53,6 +52,8 @@ const Retrieve: FunctionComponent<Props> = props => {
 
     const [inputRef, setInputRef] = useState<any>()
 
+    const [apiResponse, setApiResponse] = useState<object>()
+
     useEffect(() => {
         if (retrieveId) {
           setStatus('Request pending, checking status again in 5s...')
@@ -63,7 +64,7 @@ const Retrieve: FunctionComponent<Props> = props => {
                 setStatus(undefined)
                 clearInterval(intervalId)
                 setRetrieveDone(true)
-                setDescribeResponse(response.result)
+                setApiResponse(response.result)
               }
             }).catch((error: any) => {
               setErrorMessage(error.message)
@@ -81,14 +82,15 @@ const Retrieve: FunctionComponent<Props> = props => {
     }, [retrieveId])
 
     const retrieve = useCallback(async () => {
+        setRetrieveId(undefined)
         setZipFile(undefined)
         setRetrieveDone(false)
-        setDescribeResponse(undefined)
+        setApiResponse(undefined)
         try {
           NProgress.start()
           const response = await props.sendRetrieve({types: metadataTypes, packageNames, singlePackage, sessionId: props.sid, soapEndpoint: props.soapEndpoint, apiVersion: props.apiVersion})
           setRetrieveId(response.result.id)
-          setDescribeResponse(response.result)
+          setApiResponse(response.result)
         } catch (error) {
           setErrorMessage((error instanceof Error) ? error.message : error + '')
         } finally {
@@ -126,7 +128,7 @@ const Retrieve: FunctionComponent<Props> = props => {
     }, [metadataTypes, props.soapEndpoint, props.sid, packageNames])
 
     const clear = useCallback(async () => {
-      setDescribeResponse(undefined)
+      setApiResponse(undefined)
       setMetadataTypes([{name: '', members: []}])
       setRetrieveDone(false)
       setRetrieveId(undefined)
@@ -206,6 +208,7 @@ const Retrieve: FunctionComponent<Props> = props => {
         <Button onClick={clear}>Clear</Button>
         {retrieveDone && !zipFile && <Button onClick={downloadZip}>Fetch Zip</Button>}
         {zipFile && <a download href={`data:application/zip;base64,${zipFile}`}>Download</a>}
+        <div>{JSON.stringify(apiResponse)}</div>
     </div>
 }
 

@@ -8,7 +8,6 @@ import { TextField } from "@mui/material"
 
 
 interface Props {
-    setDescribeResponse: (obj?: object) => void
     setErrorMessage: (msg: string) => void
     apiVersion: string
     sfdcBaseUrl: string
@@ -18,7 +17,7 @@ interface Props {
 }
 
 const RecordEditor: FunctionComponent<Props> = (props) => {
-    const {setDescribeResponse, setErrorMessage} = props
+    const {setErrorMessage} = props
 
     // const {api, apiVersion, sfdcBaseUrl} = useContext(SessionContext)
 
@@ -30,7 +29,6 @@ const RecordEditor: FunctionComponent<Props> = (props) => {
 
     const fetch = useCallback(async () => {
         setErrorMessage('')
-        setDescribeResponse(undefined)
         setRecord({})
         setNewRecord({})
         NProgress.start()

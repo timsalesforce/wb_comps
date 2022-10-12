@@ -1,5 +1,5 @@
 import { FunctionComponent, SyntheticEvent, useCallback, useEffect, useMemo, useState } from "react"
-import { ApiType, Option, SfdcApi } from '../types'
+import { ApiType, SfdcApi } from '../types'
 import NProgress from 'nprogress'
 import React from "react"
 import Metadata from "./Metadata"
@@ -9,10 +9,11 @@ import Signin from "./Signin"
 import SOQL from "./SOQL"
 import styled from "styled-components"
 import WorkbenchHeader from "./WorkbenchHeader"
-import { Box, FormControl, InputLabel, MenuItem, Select, Tab, Tabs, Typography } from "@mui/material"
+import { Box, Tab, Tabs, Typography } from "@mui/material"
 import * as apiStub from '../api/apiStub'
 import * as directApi from '../api/directApi'
 import * as middleApi from '../api/middleApi'
+import StandardAndCustomObjects from "./StandardAndCustomObjects"
 
 export interface Props {
     customApi?: SfdcApi
@@ -63,8 +64,6 @@ const Workbench: FunctionComponent<Props> = props => {
 
     const [objects, setObjects] = useState<string[]>([])
     const [errorMessage, setErrorMessage] = useState<string>('')
-    const [objectOptions, setObjectOptions] = useState<Option[]>()
-    const [describeResponse, setDescribeResponse] = useState<object>()
     const [_objectName, setObjectName] = useState<string>('')
     const [api, setApi] = useState<SfdcApi>(apiStub)
 
@@ -95,9 +94,9 @@ const Workbench: FunctionComponent<Props> = props => {
     useEffect(() => {
       if (sid) {
         api.setAxiosAuthHeader(sid)
-        setObjectOptions(objects.map((o: string) => { return {value: o, label: o} }))
+        fetchObjects()
       }
-    }, [sid, objects, api])
+    }, [sid, api])
 
     useEffect(() => {
       props.middleUrl && api.setAxiosBaseURL(props.middleUrl)
@@ -121,34 +120,6 @@ const Workbench: FunctionComponent<Props> = props => {
         api.setAxiosBaseURL(middleUrl || sfdcBaseUrl)
     }, [sfdcBaseUrl, middleUrl, api])
 
-    const showObject = useCallback(async (object: string) => {
-        setDescribeResponse(undefined)
-        setObjectName(object)
-        NProgress.start()
-        try {
-            const obj = await api.describeObject({object, apiVersion, sfdcBaseUrl})
-            const attributeEntries = Object.entries(obj).filter(entry => typeof entry[1] === 'string' || typeof entry[1] === 'boolean')
-            const fields = obj.fields.map((f: any) => { return [f.name, f]})
-            const childRelationships = obj.childRelationships.map((r: any) => { return [`${r.childSObject}.${r.field}`, r]})
-            const recordTypeInfos = obj.recordTypeInfos.map((r: any) => { return [r.name, r]})
-            const supportedScopes = obj.supportedScopes.map((s: any) => { return [s.label, s] })
-            const actionOverrides = obj.actionOverrides.map((o: any) => { return [o.name, o] })
-            const _obj = {
-            "Attributes": Object.fromEntries(attributeEntries),
-            "Fields": Object.fromEntries(fields),
-            "Child Relationships": Object.fromEntries(childRelationships),
-            "Record Type Infos": Object.fromEntries(recordTypeInfos),
-            "Supported Scopes": Object.fromEntries(supportedScopes),
-            "Action Overrides": Object.fromEntries(actionOverrides)
-            }
-            setDescribeResponse(_obj)
-        } catch (error) {
-            setErrorMessage(error instanceof Error ? error.message : error + '')
-        } finally {
-            NProgress.done()
-        }
-    }, [apiVersion])
-
     const handleChange = useCallback(async (e: SyntheticEvent, newValue: number) => {
       setTabValue(newValue)
     }, [])
@@ -166,15 +137,13 @@ const Workbench: FunctionComponent<Props> = props => {
             <Tab label="Rest Explorer" style={{ padding: '0 3em' }}/>
           </Tabs>
           <TabPanel index={0} value={tabValue}>
-            <FormControl sx={{ m: 0, minWidth: 100 }}>
-              <InputLabel id="demo-simple-select-label">Objects</InputLabel>
-              <Select 
-                label="Objects"
-                onSelect={(o: any) => showObject(o.value)}
-                onOpen={fetchObjects}>
-                  {objectOptions?.map(o => <MenuItem value={o.value}>{o.label}</MenuItem>)}
-              </Select>
-            </FormControl>
+            <StandardAndCustomObjects 
+              apiVersion={apiVersion}
+              sfdcBaseUrl={sfdcBaseUrl}
+              objects={objects}
+              describeObject={api.describeObject}
+              setErrorMessage={setErrorMessage}
+            />
           </TabPanel>
           <TabPanel index={1} value={tabValue}>
             <SOQL runQuery={api.runQuery} 
@@ -190,7 +159,6 @@ const Workbench: FunctionComponent<Props> = props => {
           <TabPanel index={2} value={tabValue}>
             <RecordEditor updateRecord={api.updateRecord} 
               setErrorMessage={setErrorMessage} 
-              setDescribeResponse={setDescribeResponse} 
               apiVersion={apiVersion} 
               sfdcBaseUrl={sfdcBaseUrl} 
               describeObject={api.describeObject} 
@@ -199,7 +167,6 @@ const Workbench: FunctionComponent<Props> = props => {
           <TabPanel index={3} value={tabValue}>
             <Metadata setObjectName={setObjectName} 
               setErrorMessage={setErrorMessage} 
-              setDescribeResponse={setDescribeResponse} 
               sid={sid} 
               soapEndpoint={soapEndpoint} 
               apiVersion={apiVersion} 
@@ -210,7 +177,6 @@ const Workbench: FunctionComponent<Props> = props => {
           </TabPanel>
           <TabPanel index={4} value={tabValue}>
             <RestExplorer setErrorMessage={setErrorMessage} 
-              setDescribeResponse={setDescribeResponse} 
               apiVersion={""} 
               sfdcBaseUrl={""} 
               handleError={api.handleError} 
@@ -218,7 +184,6 @@ const Workbench: FunctionComponent<Props> = props => {
               postRest={api.postRest}/>
           </TabPanel></div> || <Signin signin={api.signin} 
                       login={api.login}/>}
-        <div>{JSON.stringify(describeResponse)}</div>
       </WorkbenchContainer>
     </div>
 

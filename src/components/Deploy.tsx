@@ -12,7 +12,6 @@ import { TextField, Input } from "@mui/material"
 
 export interface Props {
     setErrorMessage: (message: string) => void
-    setDescribeResponse: (response: any) => void
     setStatus: (staus?: string) => void
     setObjectName: (name: string) => void
     sendDeploy: (payload: DeployPayload) => Promise<any>
@@ -36,7 +35,7 @@ const RadioGrid = styled.div`
 
 const Deploy: FunctionComponent<Props> = props => {
     
-    const {setErrorMessage, setDescribeResponse, setStatus} = props
+    const {setErrorMessage, setStatus} = props
 
     const [deployId, setDeployId] = useState<string>()
     const [zipFile, setZipFile] = useState<File>()
@@ -53,6 +52,8 @@ const Deploy: FunctionComponent<Props> = props => {
 
     const [inputRef, setInputRef] = useState<any>()
 
+    const [apiResponse, setApiResponse] = useState<object>()
+
     useEffect(() => {
         if (deployId) {
           setStatus('Request pending, checking status again in 5s...')
@@ -62,7 +63,7 @@ const Deploy: FunctionComponent<Props> = props => {
               if (response.result.done) {
                 setStatus(undefined)
                 clearInterval(intervalId)
-                setDescribeResponse(response.result)
+                setApiResponse(response.result)
               }
             }).catch((error: any) => {
               setErrorMessage(error.message)
@@ -79,7 +80,7 @@ const Deploy: FunctionComponent<Props> = props => {
     }, [])
 
     const deploy = useCallback(async () => {
-        setDescribeResponse(undefined)
+        setApiResponse(undefined)
         setErrorMessage('')
 
         const deployPayload: DeployPayload = {
@@ -101,7 +102,7 @@ const Deploy: FunctionComponent<Props> = props => {
           NProgress.start()
           const response = await props.sendDeploy(deployPayload)
           setDeployId(response.result.id)
-          setDescribeResponse(response.result)
+          setApiResponse(response.result)
         } catch (error) {
           setErrorMessage((error instanceof Error) ? error.message : error + '')
         } finally {
@@ -111,7 +112,7 @@ const Deploy: FunctionComponent<Props> = props => {
     }, [zipFile, allowMissingFiles, autoUpdatePackage, ignoreWarnings, checkOnly, performRetrieve, purgeOnDelete, rollbackOnError, singlePackage, runTests, testLevel])
 
     const clear = useCallback(async () => {
-        setDescribeResponse(undefined)
+        setApiResponse(undefined)
         setDeployId(undefined)
         setZipFile(undefined)
         setStatus(undefined)
@@ -245,6 +246,7 @@ const Deploy: FunctionComponent<Props> = props => {
         </PaddedDiv>
         {zipFile && <Button onClick={deploy}>Deploy</Button>}
         <Button onClick={clear}>Clear</Button>
+        <div>{JSON.stringify(apiResponse)}</div>
     </div>
 }
 

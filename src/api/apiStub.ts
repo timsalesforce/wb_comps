@@ -26,11 +26,19 @@ export async function describeGlobal(payload: BaseRestPayload) : Promise<any> {
 }
 
 export async function sendRest(payload: AdhocRestPayload) : Promise<any> {
-
+    return {
+        dummy: 'object',
+        for: 'testing',
+        here: {
+            is: 'an object'
+        }
+    }
 }
 
 export async function postRest(payload: AdhocRestPostPayload) : Promise<any> {
-
+    return {
+        payload: payload
+    }
 }
 
 export async function patchRest(payload: AdhocRestPostPayload) : Promise<any> {
@@ -63,19 +71,39 @@ export async function runQuery(payload: SOQLQueryPayload) : Promise<any> {
 }
 
 export async function sendRetrieve(payload: RetrievePayload) : Promise<any> {
-  
+  return {
+    result: {
+        id: 'retrieve1',
+        done: false
+    }
+  }
 }
 
 export async function sendDeploy(payload: DeployPayload) : Promise<any> {
-  
+  return {
+    result: {
+        id: 'deploy1',
+        done: false
+    }
+  }
 }
 
 export async function sendRetrieveStatus(payload: RetrieveStatusPayload) : Promise<any> {
-  
+    return {
+        result: {
+            id: 'retrieve1',
+            done: true
+        }
+      }
 }
 
 export async function sendDeployStatus(payload: DeployStatusPayload) : Promise<any> {
-  
+    return {
+        result: {
+            id: 'deploy1',
+            done: true
+        }
+    }
 }
 
 export async function updateRecord(payload: UpdateRecordPayload) : Promise<any> {
