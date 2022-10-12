@@ -1,5 +1,5 @@
-import { FunctionComponent, SyntheticEvent, useCallback, useEffect, useState } from "react"
-import { Option, SfdcApi } from '../types'
+import { FunctionComponent, SyntheticEvent, useCallback, useEffect, useMemo, useState } from "react"
+import { ApiType, Option, SfdcApi } from '../types'
 import NProgress from 'nprogress'
 import React from "react"
 import Metadata from "./Metadata"
@@ -10,12 +10,17 @@ import SOQL from "./SOQL"
 import styled from "styled-components"
 import WorkbenchHeader from "./WorkbenchHeader"
 import { Box, FormControl, InputLabel, MenuItem, Select, Tab, Tabs, Typography } from "@mui/material"
+import * as apiStub from '../api/apiStub'
+import * as directApi from '../api/directApi'
+import * as middleApi from '../api/middleApi'
 
 export interface Props {
-    api: SfdcApi
+    customApi?: SfdcApi
+    apiType: ApiType
     sid: string
     apiVersion: string
     sfdcBaseUrl: string
+    middleUrl?: string
 }
 
 const WorkbenchContainer = styled.div`
@@ -54,23 +59,49 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const Workbench: FunctionComponent<Props> = props => {
-    const {api, sid, apiVersion, sfdcBaseUrl} = props
+    const {customApi, sid, apiVersion, sfdcBaseUrl, middleUrl, apiType} = props
 
     const [objects, setObjects] = useState<string[]>([])
     const [errorMessage, setErrorMessage] = useState<string>('')
     const [objectOptions, setObjectOptions] = useState<Option[]>()
     const [describeResponse, setDescribeResponse] = useState<object>()
     const [_objectName, setObjectName] = useState<string>('')
-    const [soapEndpoint] = useState<string>(`${props.sfdcBaseUrl}/services/Soap/m/${props.apiVersion}`)
+    const [api, setApi] = useState<SfdcApi>(apiStub)
 
     const [tabValue, setTabValue] = useState<number>(0)
     
+    const soapEndpoint = useMemo(() => {
+      return `${props.sfdcBaseUrl}/services/Soap/m/${props.apiVersion}`
+    }, [props.sfdcBaseUrl])
+
     useEffect(() => {
-    if (sid) {
+      switch (apiType) {
+        case 'direct': 
+          setApi(directApi)
+          break
+        case 'middle':
+          setApi(middleApi)
+          break
+        case 'stub':
+            setApi(apiStub)
+            break
+        case 'custom':
+          if (customApi) {
+            setApi(customApi) 
+          } else throw new Error('Must include an api if customApi is used')
+      }
+    }, [apiType, api])
+
+    useEffect(() => {
+      if (sid) {
         api.setAxiosAuthHeader(sid)
-            setObjectOptions(objects.map((o: string) => { return {value: o, label: o} }))
-        }
+        setObjectOptions(objects.map((o: string) => { return {value: o, label: o} }))
+      }
     }, [sid, objects, api])
+
+    useEffect(() => {
+      props.middleUrl && api.setAxiosBaseURL(props.middleUrl)
+    }, [props.middleUrl])
 
     const fetchObjects = useCallback(async (_event?: SyntheticEvent, apiVersionOverride?: string, sfdcBaseUrlOverride?: string) => {
         if (!objects || objects.length === 0) {
@@ -87,12 +118,8 @@ const Workbench: FunctionComponent<Props> = props => {
     }, [objects, apiVersion, sfdcBaseUrl, api])
 
     useEffect(() => {
-        sfdcBaseUrl && api.setAxiosBaseURL(sfdcBaseUrl)
-    }, [sfdcBaseUrl, api])
-
-    // const shouldCollapse = useCallback((entry: any) => {
-    //     return entry.name !== objectName
-    // }, [objectName])
+        api.setAxiosBaseURL(middleUrl || sfdcBaseUrl)
+    }, [sfdcBaseUrl, middleUrl, api])
 
     const showObject = useCallback(async (object: string) => {
         setDescribeResponse(undefined)

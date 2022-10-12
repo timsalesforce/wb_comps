@@ -1,5 +1,7 @@
 export type TestLevel = 'NoTestRun' | 'RunLocalTests' | 'RunAllTestsInOrg' | 'RunSpecifiedTests'
 
+export type ApiType = 'direct' | 'middle' | 'stub' | 'custom'
+
 export interface Option {
     value: string
     label: string
@@ -113,6 +115,7 @@ export interface UpdateRecordPayload extends BaseRestPayload {
 export interface SfdcApi {
     setAxiosAuthHeader: (sid: string) => void
     setAxiosBaseURL: (url: string) => void
+    setMiddleUrl?: (url: string) => void
     signin: (baseUrl: string) => Promise<any>
     login: (username: string, password: string, baseUrl: string, apiVersion?: string) => Promise<any>
     signout?: () => Promise<any>
