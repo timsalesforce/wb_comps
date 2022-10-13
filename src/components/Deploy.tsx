@@ -39,7 +39,7 @@ const Deploy: FunctionComponent<Props> = props => {
     const {setErrorMessage, setStatus} = props
 
     const [deployId, setDeployId] = useState<string>()
-    const [zipFile, setZipFile] = useState<File>()
+    const [zipFile, setZipFile] = useState<string>()
     const [allowMissingFiles, setAllowMissingFiles] = useState<boolean>(false)
     const [autoUpdatePackage, setAutoUpdatePackage] = useState<boolean>(false)
     const [checkOnly, setCheckOnly] = useState<boolean>(false)
@@ -77,7 +77,19 @@ const Deploy: FunctionComponent<Props> = props => {
       }, [deployId])
 
     const changeHandler = useCallback(async (event: ChangeEvent<HTMLInputElement>) => {
-        setZipFile(event.target.files && event.target.files[0] || undefined)
+        const file = event.target.files && event.target.files[0]
+        if (file) {
+            setZipFile(await base64(file))
+        }
+    }, [])
+
+    const base64 = useCallback(async (file: File) : Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result?.toString().replace(/^data:application\/zip;base64,/, '') || '');
+            reader.onerror = error => reject(error);
+        })
     }, [])
 
     const deploy = useCallback(async () => {

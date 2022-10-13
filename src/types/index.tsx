@@ -73,7 +73,7 @@ export interface DeployPayload {
     singlePackage: boolean
     testLevel: string
     allowMissingFiles: boolean
-    zipFile?: File
+    zipFile?: string
     sessionId?: string
     soapEndpoint: string
 }
