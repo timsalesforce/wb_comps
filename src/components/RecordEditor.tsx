@@ -19,8 +19,6 @@ interface Props {
 const RecordEditor: FunctionComponent<Props> = (props) => {
     const {setErrorMessage} = props
 
-    // const {api, apiVersion, sfdcBaseUrl} = useContext(SessionContext)
-
     const [recordId, setRecordId] = useState<string>('')
     const [record, setRecord] = useState<any>({})
     const [entityType, setEntityType] = useState<string>('')

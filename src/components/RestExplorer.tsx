@@ -25,8 +25,6 @@ const RadioGrid = styled.div`
 `
 
 const RestExplorer: FunctionComponent<Props> = (props) => {
-
-    // const {api, apiVersion, sfdcBaseUrl} = useContext(SessionContext)
     const {setErrorMessage} = props
     const [restEndpoint, setRestEndpoint] = useState<string>(`/services/data/v${props.apiVersion}`)
     const [httpMethod, setHttpMethod] = useState<string>('get')

@@ -134,7 +134,7 @@ const Deploy: FunctionComponent<Props> = props => {
 
     return <div>
         <PaddedDiv>
-        <div className="slds-text-title_bold slds-form-element__label">File</div>
+        <div>File</div>
             <Input name="zipFile" type="file" inputRef={setInputRef} onChange={changeHandler}/>
         </PaddedDiv>
         <PaddedDiv>

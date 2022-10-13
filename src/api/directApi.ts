@@ -112,6 +112,7 @@ export async function sendRetrieve(payload: RetrievePayload) : Promise<any> {
 
 export async function sendDeploy(payload: DeployPayload) : Promise<any> {
   const parser = new XMLParser(parserOptions);
+  const fileText = await payload.zipFile?.text()
   const xmlPayload = `<?xml version="1.0" encoding="utf-8"?>
   <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://soap.sforce.com/2006/04/metadata">
       <soap:Header>
@@ -121,7 +122,7 @@ export async function sendDeploy(payload: DeployPayload) : Promise<any> {
       </soap:Header>
       <soap:Body>
           <deploy xmlns="http://soap.sforce.com/2006/04/metadata">
-              <ZipFile>${payload.zipFile}</ZipFile>
+              <ZipFile>${Buffer.from(fileText || '', 'base64')}ZipFile>
               <DeployOptions>
                 <allowMissingFiles>${payload.allowMissingFiles}</allowMissingFiles>
                 <autoUpdatePackage>${payload.autoUpdatePackage}</autoUpdatePackage>
