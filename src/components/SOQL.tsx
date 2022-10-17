@@ -77,9 +77,11 @@ const SOQL: FunctionComponent<Props> = props => {
     }, [])
     
     const executeQuery = useCallback(async () => {
+        setErrorMessage('')
+        let response
         try {
             NProgress.start()
-            const response = await runQuery({query: query!, apiVersion, sfdcBaseUrl})
+            response = await runQuery({query: query!, apiVersion, sfdcBaseUrl})
             const records: QueryRecord[] = response.records.map((r: any) => { 
                 return { fields: Object.entries(r).filter(es => typeof es[1] === 'string' || typeof es[1] === 'boolean').map(e => {
                     return { name: e[0], value: e[1] + "" }
@@ -87,7 +89,13 @@ const SOQL: FunctionComponent<Props> = props => {
             })
             setJsonResponse(records)
         } catch (error) {
-            setErrorMessage(error instanceof Error ? error.message : error + '')
+            let errorMessage
+            if (response) {
+                errorMessage = response[0].message
+            } else {
+                errorMessage = error instanceof Error ? error.message : error + ''
+            }
+            setErrorMessage(errorMessage)
         } finally {
             NProgress.done()
         }
