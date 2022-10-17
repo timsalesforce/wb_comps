@@ -89,6 +89,7 @@ const SOQL: FunctionComponent<Props> = props => {
             })
             setJsonResponse(records)
         } catch (error) {
+            console.log(error)
             let errorMessage
             if (response) {
                 errorMessage = response[0].message
