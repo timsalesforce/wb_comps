@@ -75,8 +75,12 @@ export async function describeObject(payload: DescribeObjectPayload) : Promise<S
 }
 
 export async function runQuery(payload: SOQLQueryPayload) : Promise<any> {
-  const response = await extensionApi.get(`/services/data/v${payload.apiVersion}/query?q=${payload.query}`)
-  return response.data
+  try {
+    const response = await extensionApi.get(`/services/data/v${payload.apiVersion}/query?q=${payload.query}`)
+    return response.data
+  } catch (error: any) {
+    return error.toJSON()
+  }
 }
 
 export async function sendRetrieve(payload: RetrievePayload) : Promise<any> {
