@@ -135,6 +135,5 @@ export interface SfdcApi {
     sendDeploy: (payload: DeployPayload) => Promise<any>
     sendDeployStatus: (payload: DeployStatusPayload) => Promise<any>
     updateRecord: (payload: UpdateRecordPayload) => Promise<any>
-    handleError: (error: any) => string
     fetchRecord: (payload: FetchRecordPayload) => Promise<object>
 }

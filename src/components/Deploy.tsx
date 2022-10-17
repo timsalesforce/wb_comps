@@ -12,7 +12,7 @@ import { TextField, Input } from "@mui/material"
 import { JsonViewer } from '@textea/json-viewer'
 
 export interface Props {
-    setErrorMessage: (message: string) => void
+    handleError: (error: any) => void
     setStatus: (staus?: string) => void
     setObjectName: (name: string) => void
     sendDeploy: (payload: DeployPayload) => Promise<any>
@@ -36,7 +36,7 @@ const RadioGrid = styled.div`
 
 const Deploy: FunctionComponent<Props> = props => {
     
-    const {setErrorMessage, setStatus} = props
+    const {handleError, setStatus} = props
 
     const [deployId, setDeployId] = useState<string>()
     const [zipFile, setZipFile] = useState<string>()
@@ -67,7 +67,7 @@ const Deploy: FunctionComponent<Props> = props => {
                 setApiResponse(response.result)
               }
             }).catch((error: any) => {
-              setErrorMessage(error.message)
+              handleError(error)
               clearInterval(intervalId)
             }).finally(() => {
               NProgress.done()
@@ -94,7 +94,7 @@ const Deploy: FunctionComponent<Props> = props => {
 
     const deploy = useCallback(async () => {
         setApiResponse(undefined)
-        setErrorMessage('')
+        handleError('')
 
         const deployPayload: DeployPayload = {
             zipFile,
@@ -117,7 +117,7 @@ const Deploy: FunctionComponent<Props> = props => {
           setDeployId(response.result.id)
           setApiResponse(response.result)
         } catch (error) {
-          setErrorMessage((error instanceof Error) ? error.message : error + '')
+            handleError(error)
         } finally {
           NProgress.done()
           props.setObjectName('Deploy')
@@ -125,7 +125,7 @@ const Deploy: FunctionComponent<Props> = props => {
     }, [zipFile, allowMissingFiles, autoUpdatePackage, ignoreWarnings, checkOnly, performRetrieve, purgeOnDelete, rollbackOnError, singlePackage, runTests, testLevel])
 
     const clear = useCallback(async () => {
-        setErrorMessage('')
+        handleError('')
         setApiResponse(undefined)
         setDeployId(undefined)
         setZipFile(undefined)

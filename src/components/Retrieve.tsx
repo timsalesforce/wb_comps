@@ -7,7 +7,7 @@ import { Button, Checkbox, FormControlLabel, Input, Radio, RadioGroup, TextField
 import { JsonViewer } from '@textea/json-viewer'
 
 interface Props {
-    setErrorMessage: (message: string) => void
+    handleError: (error: any) => void
     setObjectName: (name: string) => void
     setStatus: (staus?: string) => void
     sendRetrieve: (payload: RetrievePayload) => Promise<any>
@@ -40,7 +40,7 @@ const NameAndMemberComponent: FunctionComponent<NMProps> = props => {
 
 const Retrieve: FunctionComponent<Props> = props => {
     
-    const {setErrorMessage, setStatus} = props
+    const {handleError, setStatus} = props
 
     const [metadataTypes, setMetadataTypes] = useState<NameAndMembers[]>([{name: '', members: []}])
     const [retrieveId, setRetrieveId] = useState<string>()
@@ -68,7 +68,7 @@ const Retrieve: FunctionComponent<Props> = props => {
                 setApiResponse(response.result)
               }
             }).catch((error: any) => {
-              setErrorMessage(error.message)
+              handleError(error)
               clearInterval(intervalId)
             }).finally(() => {
               NProgress.done()
@@ -78,13 +78,13 @@ const Retrieve: FunctionComponent<Props> = props => {
       }, [retrieveId])
     
     const downloadZip = useCallback(async () => {
-        setErrorMessage('')
+        handleError('')
         const response = await props.sendRetrieveStatus({id: retrieveId!, includeZip: true, sessionId: props.sid, soapEndpoint: props.soapEndpoint})
         setZipFile(response.result.zipFile)
     }, [retrieveId])
 
     const retrieve = useCallback(async () => {
-        setErrorMessage('')
+        handleError('')
         setRetrieveId(undefined)
         setZipFile(undefined)
         setRetrieveDone(false)
@@ -95,7 +95,7 @@ const Retrieve: FunctionComponent<Props> = props => {
           setRetrieveId(response.result.id)
           setApiResponse(response.result)
         } catch (error) {
-          setErrorMessage((error instanceof Error) ? error.message : error + '')
+          handleError(error)
         } finally {
           NProgress.done()
           props.setObjectName('Retrieve')
@@ -131,7 +131,7 @@ const Retrieve: FunctionComponent<Props> = props => {
     }, [metadataTypes, props.soapEndpoint, props.sid, packageNames])
 
     const clear = useCallback(async () => {
-      setErrorMessage('')
+      handleError('')
       setApiResponse(undefined)
       setMetadataTypes([{name: '', members: []}])
       setRetrieveDone(false)
@@ -143,7 +143,7 @@ const Retrieve: FunctionComponent<Props> = props => {
     }, [inputRef])
 
     const fileChangeHandler = useCallback(async (event: ChangeEvent<HTMLInputElement>) => {
-      setErrorMessage('')
+      handleError('')
       if (event.target.files && event.target.files.length > 0) {
         setPackageFile(event.target.files[0])
         const _metadataTypes: NameAndMembers[] = []

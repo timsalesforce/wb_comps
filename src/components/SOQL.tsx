@@ -6,14 +6,13 @@ import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, TextField } f
 import Select, { SelectChangeEvent } from "@mui/material/Select"
 
 interface Props {
-    setErrorMessage: (message: string) => void
+    handleError: (error: any) => void
     fetchObjects: () => void
     objects: string[]
     sid: string
     apiVersion: string
     sfdcBaseUrl: string
     describeObject: (payload: DescribeObjectPayload) => Promise<SObjectDescribeResult>
-    handleError: (message: string) => string
     runQuery: (payload: SOQLQueryPayload) => Promise<any>
 }
 
@@ -39,8 +38,8 @@ function getStyles(name: string, fields: string[]) {
 
 const SOQL: FunctionComponent<Props> = props => {
 
-    const {setErrorMessage, fetchObjects, objects, apiVersion, sfdcBaseUrl,
-        describeObject, handleError, runQuery} = props
+    const {handleError, fetchObjects, objects, apiVersion, sfdcBaseUrl,
+        describeObject, runQuery} = props
 
     const [selectedObject, setSelectedObject] = useState<string>()
     const [fields, setFields] = useState<string[]>(['Id', 'Name'])
@@ -65,7 +64,7 @@ const SOQL: FunctionComponent<Props> = props => {
             const describeResult: SObjectDescribeResult = await describeObject({object, apiVersion, sfdcBaseUrl})
             setFields(describeResult.fields.map(f => f.name))
         } catch (error: any) {
-            setErrorMessage(handleError(error))
+            handleError(error)
         } finally {
             NProgress.done()
         }
@@ -77,7 +76,7 @@ const SOQL: FunctionComponent<Props> = props => {
     }, [])
     
     const executeQuery = useCallback(async () => {
-        setErrorMessage('')
+        handleError('')
         let response
         try {
             NProgress.start()
@@ -88,15 +87,8 @@ const SOQL: FunctionComponent<Props> = props => {
                 })}
             })
             setJsonResponse(records)
-        } catch (error) {
-            console.log(error)
-            let errorMessage
-            if (response) {
-                errorMessage = response[0].message
-            } else {
-                errorMessage = error instanceof Error ? error.message : error + ''
-            }
-            setErrorMessage(errorMessage)
+        } catch (error: any) {
+            handleError(error)
         } finally {
             NProgress.done()
         }
@@ -147,6 +139,7 @@ const SOQL: FunctionComponent<Props> = props => {
             onClick={() => {
                 setJsonResponse(undefined)
                 setSelected([])
+                handleError('')
             }}>Clear</Button>
         <table>
             {jsonResponse && jsonResponse.length > 0 && jsonResponse[0].fields.map(f => <th>{f.name}</th>)}

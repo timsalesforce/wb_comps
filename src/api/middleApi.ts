@@ -85,12 +85,3 @@ export async function fetchRecord(payload: FetchRecordPayload) : Promise<any> {
   const response = await sendRest({...payload, endpoint: `/services/data/${payload.apiVersion}/sobjects/${payload.objectName}/${payload.objectId}`})
   return response.data
 }
-
-export function handleError(error: any) : string {
-  const status = error.response && error.response.status
-  let msg = error instanceof Error ? error.message : error + ''
-  if (status === 401) {
-    msg += `, try logging in again`
-  }
-  return msg
-}

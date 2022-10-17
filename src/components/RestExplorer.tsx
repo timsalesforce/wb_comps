@@ -7,10 +7,9 @@ import { Button, FormControlLabel, Radio, RadioGroup, TextField } from "@mui/mat
 import { JsonViewer } from '@textea/json-viewer'
 
 interface Props {
-    setErrorMessage: (msg: string) => void
+    handleError: (error: any) => void
     apiVersion: string
     sfdcBaseUrl: string
-    handleError: (message: string) => string
     sendRest: (payload: AdhocRestPayload) => Promise<any>
     postRest: (payload: AdhocRestPostPayload) => Promise<any>
 }
@@ -25,7 +24,7 @@ const RadioGrid = styled.div`
 `
 
 const RestExplorer: FunctionComponent<Props> = (props) => {
-    const {setErrorMessage} = props
+    const {handleError} = props
     const [restEndpoint, setRestEndpoint] = useState<string>(`/services/data/v${props.apiVersion}`)
     const [httpMethod, setHttpMethod] = useState<string>('get')
     const [body, setBody] = useState<string>('')
@@ -37,7 +36,7 @@ const RestExplorer: FunctionComponent<Props> = (props) => {
     }, [props.apiVersion])
 
     const send = useCallback(async () => {
-        setErrorMessage('')
+        handleError('')
         NProgress.start()
         try {
             let apiResponse
@@ -55,7 +54,7 @@ const RestExplorer: FunctionComponent<Props> = (props) => {
             }
           setApiResponse(apiResponse)
         } catch (error: any) {
-          setErrorMessage(props.handleError(error))
+          handleError(error)
         } finally {
           NProgress.done()
         }

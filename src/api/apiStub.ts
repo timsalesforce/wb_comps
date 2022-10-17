@@ -6142,7 +6142,3 @@ export async function fetchRecord(payload: FetchRecordPayload) : Promise<any> {
     };
 }
 
-export function handleError(error: any) : string {
-  return ''
-}
-

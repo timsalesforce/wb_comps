@@ -8,7 +8,7 @@ import { TextField } from "@mui/material"
 
 
 interface Props {
-    setErrorMessage: (msg: string) => void
+    handleError: (error: any) => void
     apiVersion: string
     sfdcBaseUrl: string
     describeObject: (payload: DescribeObjectPayload) => Promise<SObjectDescribeResult>
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const RecordEditor: FunctionComponent<Props> = (props) => {
-    const {setErrorMessage} = props
+    const {handleError} = props
 
     const [recordId, setRecordId] = useState<string>('')
     const [record, setRecord] = useState<any>({})
@@ -26,7 +26,7 @@ const RecordEditor: FunctionComponent<Props> = (props) => {
     const [newRecord, setNewRecord] = useState<any>({})
 
     const fetch = useCallback(async () => {
-        setErrorMessage('')
+        handleError('')
         setRecord({})
         setNewRecord({})
         NProgress.start()
@@ -46,7 +46,7 @@ const RecordEditor: FunctionComponent<Props> = (props) => {
             const theRecord = await props.fetchRecord({apiVersion: props.apiVersion, sfdcBaseUrl: props.sfdcBaseUrl, objectId: recordId, objectName: entityType})
             setRecord(theRecord)
         } catch (error) {
-          setErrorMessage(error instanceof Error ? error.message : error + '')
+            handleError(error)
         } finally {
           NProgress.done()
         }
@@ -66,7 +66,7 @@ const RecordEditor: FunctionComponent<Props> = (props) => {
         try {
             await props.updateRecord({apiVersion: props.apiVersion, sfdcBaseUrl: props.sfdcBaseUrl, objectId: recordId, objectName: entityType, body: JSON.stringify(newRecord), verb: 'patch'})
         } catch (error) {
-            setErrorMessage(error instanceof Error ? error.message : error + '')
+            handleError(error)
         } finally {
             await fetch()
             setNewRecord({})

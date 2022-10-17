@@ -75,12 +75,8 @@ export async function describeObject(payload: DescribeObjectPayload) : Promise<S
 }
 
 export async function runQuery(payload: SOQLQueryPayload) : Promise<any> {
-  try {
-    const response = await extensionApi.get(`/services/data/v${payload.apiVersion}/query?q=${payload.query}`)
-    return response.data
-  } catch (error: any) {
-    return error.toJSON()
-  }
+  const response = await extensionApi.get(`/services/data/v${payload.apiVersion}/query?q=${payload.query}`)
+  return response.data
 }
 
 export async function sendRetrieve(payload: RetrievePayload) : Promise<any> {
@@ -219,14 +215,5 @@ export async function updateRecord(payload: UpdateRecordPayload) : Promise<any> 
       }
     })
   return response.data
-}
-
-export function handleError(error: any) : string {
-  const status = error.response && error.response.status
-  let msg = error instanceof Error ? error.message : error + ''
-  if (status === 401) {
-    msg += `, try logging in again`
-  }
-  return msg
 }
 

@@ -30,7 +30,7 @@ const WorkbenchContainer = styled.div`
   margin: auto;
 `
 
-const ErrorMessage = styled.div`
+const ErrorMessage = styled.pre`
   color: red;
 `
 
@@ -70,6 +70,17 @@ const Workbench: FunctionComponent<Props> = props => {
     const [api, setApi] = useState<SfdcApi>(apiStub)
 
     const [tabValue, setTabValue] = useState<number>(0)
+
+    const handleError = useCallback((error: any) => {
+      const status = error.response && error.response.status
+      let message = error.response && error.response.data && error.response.data.length > 0 && error.response.data[0].message || error.message || error + ''
+      // message = message.replaceAll('\n', '<br/>')
+      // message = message.replace(/\s/g, '&nbsp')
+      if (status === 401) {
+        message += `, try logging in again`
+      }
+      setErrorMessage(message)
+    }, [])
     
     const soapEndpoint = useMemo(() => {
       return `${props.sfdcBaseUrl}/services/Soap/m/${props.apiVersion}`
@@ -108,7 +119,7 @@ const Workbench: FunctionComponent<Props> = props => {
                 const response = await api.describeGlobal({sfdcBaseUrl: sfdcBaseUrlOverride || sfdcBaseUrl, apiVersion: apiVersionOverride || apiVersion})
                 response && response.sobjects && setObjects(response.sobjects.map((o: any) => o.name))
             } catch (error) {
-                setErrorMessage(api.handleError(error))
+                handleError(error)
             } finally {
                 NProgress.done()
             }
@@ -138,13 +149,12 @@ const Workbench: FunctionComponent<Props> = props => {
               sfdcBaseUrl={sfdcBaseUrl}
               objects={objects}
               describeObject={api.describeObject}
-              setErrorMessage={setErrorMessage}
+              handleError={handleError}
             />
           </TabPanel>
           <TabPanel index={1} value={tabValue}>
             <SOQL runQuery={api.runQuery} 
-              handleError={api.handleError} 
-              setErrorMessage={setErrorMessage} 
+              handleError={handleError} 
               fetchObjects={fetchObjects} 
               objects={objects} 
               sid={sid} 
@@ -154,7 +164,7 @@ const Workbench: FunctionComponent<Props> = props => {
           </TabPanel>
           <TabPanel index={2} value={tabValue}>
             <RecordEditor updateRecord={api.updateRecord} 
-              setErrorMessage={setErrorMessage} 
+              handleError={handleError} 
               apiVersion={apiVersion} 
               sfdcBaseUrl={sfdcBaseUrl} 
               describeObject={api.describeObject} 
@@ -162,7 +172,7 @@ const Workbench: FunctionComponent<Props> = props => {
           </TabPanel>
           <TabPanel index={3} value={tabValue}>
             <Metadata setObjectName={setObjectName} 
-              setErrorMessage={setErrorMessage} 
+              handleError={handleError} 
               sid={sid} 
               soapEndpoint={soapEndpoint} 
               apiVersion={apiVersion} 
@@ -172,13 +182,12 @@ const Workbench: FunctionComponent<Props> = props => {
               sendRetrieveStatus={api.sendRetrieveStatus}/>
           </TabPanel>
           <TabPanel index={4} value={tabValue}>
-            <RestExplorer setErrorMessage={setErrorMessage} 
+            <RestExplorer handleError={handleError} 
               apiVersion={""} 
               sfdcBaseUrl={""} 
-              handleError={api.handleError} 
               sendRest={api.sendRest} 
               postRest={api.postRest}/>
-          </TabPanel></div> || <Signin signin={api.signin} 
+          </TabPanel></div> || <Signin handleError={handleError} signin={api.signin} 
                       login={api.login}/>}
       </WorkbenchContainer>
     </div>

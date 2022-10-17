@@ -9,16 +9,16 @@ interface Props {
     describeObject: (payload: DescribeObjectPayload) => Promise<SObjectDescribeResult>
     apiVersion: string
     sfdcBaseUrl: string
-    setErrorMessage: (message: string) => void
+    handleError: (error: any) => void
 }
 
 const StandardAndCustomObjects: FunctionComponent<Props> = (props) => {
-    const {objects, describeObject, apiVersion, sfdcBaseUrl, setErrorMessage} = props
+    const {objects, describeObject, apiVersion, sfdcBaseUrl, handleError} = props
 
     const [apiResponse, setApiResponse] = useState<object>()
 
     const showObject = useCallback(async (object: string) => {
-        setErrorMessage('')
+        handleError('')
         setApiResponse(undefined)
         NProgress.start()
         try {
@@ -39,7 +39,7 @@ const StandardAndCustomObjects: FunctionComponent<Props> = (props) => {
             }
             setApiResponse(_obj)
         } catch (error) {
-            setErrorMessage(error instanceof Error ? error.message : error + '')
+            handleError(error)
         } finally {
             NProgress.done()
         }

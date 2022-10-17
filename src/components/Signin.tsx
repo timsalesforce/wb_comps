@@ -6,10 +6,6 @@ import React from 'react'
 import { Button, TextField } from '@mui/material'
 import { H2 } from '../elements'
 
-const ErrorDiv = styled.div`
-    color: red;
-`
-
 const Container = styled.div`
     text-align: center;
     padding: 3em;
@@ -18,6 +14,7 @@ const Container = styled.div`
 `
 
 interface Props {
+  handleError: (error: any) => void
   signin: (sid: string, baseUrl: string, apiVersion: string) => Promise<any>
   login: (username: string, password: string, baseUrl: string, apiVersion: string) => Promise<any>
 }
@@ -25,11 +22,12 @@ interface Props {
 // Index Page.
 const Signin: FunctionComponent<Props> = (props) => {
 
+  const {handleError} = props
+
   const [sid, setSid] = useState<string>('');
   const [baseUrl, setBaseUrl] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [apiVersion, setApiVersion] = useState<string>('55.0')
 
   const doSignin = useCallback(async () => {
@@ -41,7 +39,7 @@ const Signin: FunctionComponent<Props> = (props) => {
         await props.login(username, password, baseUrl, apiVersion)
       }
     } catch (error) {
-        setErrorMessage(error instanceof Error ? error.message : error + '')
+        handleError(error)
     } finally {
         NProgress.done()
     }
@@ -51,7 +49,6 @@ const Signin: FunctionComponent<Props> = (props) => {
   // ..
   return <Container>
     <H2 className="slds-text-title_caps slds-p-vertical_medium">Sign In</H2>
-    {errorMessage && <ErrorDiv>Signin failed: {errorMessage}</ErrorDiv>}
     <TextField fullWidth name="username" placeholder="Username" onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}/>
     <TextField fullWidth type="password" name="password" placeholder="Password" onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
     <TextField fullWidth type="text" name="sid" placeholder="Session ID" onChange={(e: ChangeEvent<HTMLInputElement>) => setSid(e.target.value)}/>
