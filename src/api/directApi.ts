@@ -1,7 +1,7 @@
 // Dependencies.
 import axios from 'axios'
 import { XMLParser } from 'fast-xml-parser'
-import { AdhocRestPayload, AdhocRestPostPayload, BaseRestPayload, DeployPayload, DeployStatusPayload, DescribeObjectPayload, RetrievePayload, RetrieveStatusPayload, SObjectDescribeResult, SOQLQueryPayload, UpdateRecordPayload } from '../types'
+import { AdhocRestPayload, AdhocRestPostPayload, BaseRestPayload, DeployPayload, DeployStatusPayload, DescribeObjectPayload, FetchRecordPayload, RetrievePayload, RetrieveStatusPayload, SObjectDescribeResult, SOQLQueryPayload, UpdateRecordPayload } from '../types'
 
 const parserOptions = {
   ignoreAttributes: true,
@@ -201,8 +201,19 @@ export async function sendDeployStatus(payload: DeployStatusPayload) : Promise<a
   return parser.parse(response.data).Envelope.Body.checkDeployStatusResponse
 }
 
+export async function fetchRecord(payload: FetchRecordPayload) : Promise<object> {
+  const response = await extensionApi.get(`/services/data/v${payload.apiVersion}/sobjects/${payload.objectName}/${payload.objectId}`)
+  return response.data
+}
+
 export async function updateRecord(payload: UpdateRecordPayload) : Promise<any> {
-  const response = await extensionApi.post(`/updateRecord`, payload)
+  const response = await extensionApi.patch(`/services/data/v${payload.apiVersion}/sobjects/${payload.objectName}/${payload.objectId}`, 
+    payload.body,
+    {
+      headers: { 
+        'Content-Type': 'application/json',
+      }
+    })
   return response.data
 }
 

@@ -35,7 +35,7 @@ const WorkbenchHeader: FunctionComponent<Props> = (props) => {
     return <div>
         <div>
             <Header>
-                <H3>Workbench App</H3>
+                <H3>Salesforce Workbench</H3>
             </Header>
             <Header>
                 <SessionDetail>{props.sid && <div>OrgId: {orgId}</div>}</SessionDetail>

@@ -1,6 +1,6 @@
 import { ChangeEvent, FunctionComponent, useCallback, useState } from "react"
 import NProgress from 'nprogress'
-import { AdhocRestPayload, DescribeObjectPayload, SObjectDescribeResult, UpdateRecordPayload } from "../types"
+import { DescribeObjectPayload, FetchRecordPayload, SObjectDescribeResult, UpdateRecordPayload } from "../types"
 import InputElement from "./InputElement"
 import React from "react"
 import Button from "@mui/material/Button/Button"
@@ -12,7 +12,7 @@ interface Props {
     apiVersion: string
     sfdcBaseUrl: string
     describeObject: (payload: DescribeObjectPayload) => Promise<SObjectDescribeResult>
-    sendRest: (payload: AdhocRestPayload) => Promise<any>
+    fetchRecord: (payload: FetchRecordPayload) => Promise<any>
     updateRecord: (payload: UpdateRecordPayload) => Promise<any>
 }
 
@@ -38,12 +38,12 @@ const RecordEditor: FunctionComponent<Props> = (props) => {
                     {
                         type: f.type, 
                         readonly: !f.updateable, 
-                        values: f.picklistValues.map((v: any) => { return {label: v.label} })
+                        values: f.picklistValues.map((v: any) => v.label )
                     }
                 ]
             })
             setEntityFields(Object.fromEntries(fields))
-            const theRecord = await props.sendRest({apiVersion: props.apiVersion, sfdcBaseUrl: props.sfdcBaseUrl, endpoint: `/services/data/v55.0/sobjects/${entityType}/${recordId}`})
+            const theRecord = await props.fetchRecord({apiVersion: props.apiVersion, sfdcBaseUrl: props.sfdcBaseUrl, objectId: recordId, objectName: entityType})
             setRecord(theRecord)
         } catch (error) {
           setErrorMessage(error instanceof Error ? error.message : error + '')
@@ -52,16 +52,13 @@ const RecordEditor: FunctionComponent<Props> = (props) => {
         }
       }, [recordId, props.sfdcBaseUrl, props.apiVersion, entityType])
 
-    const handleChange = useCallback(async (e: ChangeEvent<HTMLInputElement>, label?: string, value?: string) => {
-        const key: string = label || e.target.labels && e.target.labels[0].innerText || ''
-        if (key) {
-            const _record = {...record}
-            const _newRecord = {...newRecord}
-            _record[key] = value || e.target.value
-            _newRecord[key] = value || e.target.value
-            setRecord(_record)
-            setNewRecord(_newRecord)
-        }
+    const handleChange = useCallback(async (e: ChangeEvent<HTMLInputElement>, fieldName: string) => {
+        const _record = {...record}
+        const _newRecord = {...newRecord}
+        _record[fieldName] = e.target.value
+        _newRecord[fieldName] = e.target.value
+        setRecord(_record)
+        setNewRecord(_newRecord)
     }, [record, newRecord])
 
     const _updateRecord = useCallback(async () => {

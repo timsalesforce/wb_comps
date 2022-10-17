@@ -16,7 +16,7 @@ export interface SObjectDescribeResult {
     recordTypeInfos: any[]
     supportedScopes: any[]
     actionOverrides: any[]
-    fields: SObjectField[]
+    fields: any[]
 }
 
 export interface FieldOption {
@@ -112,6 +112,11 @@ export interface UpdateRecordPayload extends BaseRestPayload {
     body: string
 }
 
+export interface FetchRecordPayload extends BaseRestPayload {
+    objectName: string
+    objectId: string
+}
+
 export interface SfdcApi {
     setAxiosAuthHeader: (sid: string) => void
     setAxiosBaseURL: (url: string) => void
@@ -131,4 +136,5 @@ export interface SfdcApi {
     sendDeployStatus: (payload: DeployStatusPayload) => Promise<any>
     updateRecord: (payload: UpdateRecordPayload) => Promise<any>
     handleError: (error: any) => string
+    fetchRecord: (payload: FetchRecordPayload) => Promise<object>
 }

@@ -1,6 +1,6 @@
 // Dependencies.
 import axios from 'axios'
-import { AdhocRestPayload, AdhocRestPostPayload, BaseRestPayload, DeployPayload, DeployStatusPayload, DescribeObjectPayload, RetrievePayload, RetrieveStatusPayload, SObjectDescribeResult, SOQLQueryPayload, UpdateRecordPayload } from '../types'
+import { AdhocRestPayload, AdhocRestPostPayload, BaseRestPayload, DeployPayload, DeployStatusPayload, DescribeObjectPayload, FetchRecordPayload, RetrievePayload, RetrieveStatusPayload, SObjectDescribeResult, SOQLQueryPayload, UpdateRecordPayload } from '../types'
 
 export function setAxiosAuthHeader(sid: string) {
   axios.defaults.headers.common['Authorization'] = `Bearer ${sid}`
@@ -78,6 +78,11 @@ export async function sendDeployStatus(payload: DeployStatusPayload) : Promise<a
 
 export async function updateRecord(payload: UpdateRecordPayload) : Promise<any> {
   const response = await axios.post(`/updateRecord`, payload)
+  return response.data
+}
+
+export async function fetchRecord(payload: FetchRecordPayload) : Promise<any> {
+  const response = await sendRest({...payload, endpoint: `/services/data/${payload.apiVersion}/sobjects/${payload.objectName}/${payload.objectId}`})
   return response.data
 }
 

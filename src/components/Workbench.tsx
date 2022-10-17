@@ -158,7 +158,7 @@ const Workbench: FunctionComponent<Props> = props => {
               apiVersion={apiVersion} 
               sfdcBaseUrl={sfdcBaseUrl} 
               describeObject={api.describeObject} 
-              sendRest={api.sendRest}/>
+              fetchRecord={api.fetchRecord}/>
           </TabPanel>
           <TabPanel index={3} value={tabValue}>
             <Metadata setObjectName={setObjectName} 
