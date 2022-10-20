@@ -18,9 +18,9 @@ import StandardAndCustomObjects from "./StandardAndCustomObjects"
 export interface Props {
     customApi?: SfdcApi
     apiType: ApiType
-    sid: string
-    apiVersion: string
-    sfdcBaseUrl: string
+    sid?: string
+    apiVersion?: string
+    sfdcBaseUrl?: string
     middleUrl?: string
 }
 
@@ -74,8 +74,6 @@ const Workbench: FunctionComponent<Props> = props => {
     const handleError = useCallback((error: any) => {
       const status = error.response && error.response.status
       let message = error.response && error.response.data && error.response.data.length > 0 && error.response.data[0].message || error.message || error + ''
-      // message = message.replaceAll('\n', '<br/>')
-      // message = message.replace(/\s/g, '&nbsp')
       if (status === 401) {
         message += `, try logging in again`
       }
@@ -105,9 +103,9 @@ const Workbench: FunctionComponent<Props> = props => {
     }, [apiType, api])
 
     useEffect(() => {
+      api.setAxiosBaseURL(middleUrl || sfdcBaseUrl || 'https://localhost')
       if (sid) {
         api.setAxiosAuthHeader(sid)
-        api.setAxiosBaseURL(middleUrl || sfdcBaseUrl)
         fetchObjects()
       }
     }, [sid, api, sfdcBaseUrl, middleUrl])
@@ -116,7 +114,7 @@ const Workbench: FunctionComponent<Props> = props => {
         if (!objects || objects.length === 0) {
             NProgress.start()
             try {
-                const response = await api.describeGlobal({sfdcBaseUrl: sfdcBaseUrlOverride || sfdcBaseUrl, apiVersion: apiVersionOverride || apiVersion})
+                const response = await api.describeGlobal({sfdcBaseUrl: sfdcBaseUrlOverride || sfdcBaseUrl || 'https://localhost', apiVersion: apiVersionOverride || apiVersion || '55.0'})
                 response && response.sobjects && setObjects(response.sobjects.map((o: any) => o.name))
             } catch (error) {
                 handleError(error)
@@ -132,11 +130,11 @@ const Workbench: FunctionComponent<Props> = props => {
     }, [])
 
     return <div style={{width: "100%"}}>
-      <WorkbenchHeader sid={sid} sfdcBaseUrl={sfdcBaseUrl} signout={api.signout}/>
       <WorkbenchContainer>
+      <WorkbenchHeader sid={sid} sfdcBaseUrl={sfdcBaseUrl!} signout={api.signout}/>
         <ErrorMessage>{errorMessage}</ErrorMessage>
         {sid && <div>
-        <Tabs value={tabValue} onChange={handleChange} centered>
+          <Tabs value={tabValue} onChange={handleChange} centered>
             <Tab label="Standard and Custom Objects" style={{ padding: '0 3em' }}/>
             <Tab label="SOQL Queries" style={{ padding: '0 3em' }}/>
             <Tab label="Record Editor" style={{ padding: '0 3em' }}/>
@@ -145,8 +143,8 @@ const Workbench: FunctionComponent<Props> = props => {
           </Tabs>
           <TabPanel index={0} value={tabValue}>
             <StandardAndCustomObjects 
-              apiVersion={apiVersion}
-              sfdcBaseUrl={sfdcBaseUrl}
+              apiVersion={apiVersion!}
+              sfdcBaseUrl={sfdcBaseUrl!}
               objects={objects}
               describeObject={api.describeObject}
               handleError={handleError}
@@ -158,15 +156,15 @@ const Workbench: FunctionComponent<Props> = props => {
               fetchObjects={fetchObjects} 
               objects={objects} 
               sid={sid} 
-              apiVersion={apiVersion} 
-              sfdcBaseUrl={sfdcBaseUrl} 
+              apiVersion={apiVersion!} 
+              sfdcBaseUrl={sfdcBaseUrl!} 
               describeObject={api.describeObject}/>
           </TabPanel>
           <TabPanel index={2} value={tabValue}>
             <RecordEditor updateRecord={api.updateRecord} 
               handleError={handleError} 
-              apiVersion={apiVersion} 
-              sfdcBaseUrl={sfdcBaseUrl} 
+              apiVersion={apiVersion!} 
+              sfdcBaseUrl={sfdcBaseUrl!} 
               describeObject={api.describeObject} 
               fetchRecord={api.fetchRecord}/>
           </TabPanel>
@@ -175,7 +173,7 @@ const Workbench: FunctionComponent<Props> = props => {
               handleError={handleError} 
               sid={sid} 
               soapEndpoint={soapEndpoint} 
-              apiVersion={apiVersion} 
+              apiVersion={apiVersion!} 
               sendDeploy={api.sendDeploy} 
               sendDeployStatus={api.sendDeployStatus} 
               sendRetrieve={api.sendRetrieve} 

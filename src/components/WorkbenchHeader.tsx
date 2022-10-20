@@ -22,8 +22,8 @@ const SessionDetail = styled.div`
 `
 
 interface Props {
-    sid: string
-    sfdcBaseUrl: string
+    sid?: string
+    sfdcBaseUrl?: string
     signout?: () => Promise<any>
 }
 const WorkbenchHeader: FunctionComponent<Props> = (props) => {
