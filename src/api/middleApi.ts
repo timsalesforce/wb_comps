@@ -1,6 +1,6 @@
 // Dependencies.
 import axios from 'axios'
-import { AdhocRestPayload, AdhocRestPostPayload, BaseRestPayload, DeployPayload, DeployStatusPayload, DescribeObjectPayload, FetchRecordPayload, RetrievePayload, RetrieveStatusPayload, SObjectDescribeResult, SOQLQueryPayload, UpdateRecordPayload } from '../types'
+import { AdhocRestPayload, AdhocRestPostPayload, BaseRestPayload, DeployPayload, DeployStatusPayload, DescribeObjectPayload, FetchRecordPayload, LoginResponse, RetrievePayload, RetrieveStatusPayload, SObjectDescribeResult, SOQLQueryPayload, UpdateRecordPayload } from '../types'
 
 export function setAxiosAuthHeader(sid: string) {
   axios.defaults.headers.common['Authorization'] = `Bearer ${sid}`
@@ -16,7 +16,7 @@ export async function signin(baseUrl: string) : Promise<any> {
   return response.data
 }
 
-export async function login(username: string, password: string, baseUrl: string, apiVersion?: string) : Promise<any> {
+export async function login(username: string, password: string, baseUrl: string, apiVersion?: string) : Promise<LoginResponse> {
   const response = await axios.post(`/login`, {username, password, baseUrl, apiVersion})
   return response.data
 }

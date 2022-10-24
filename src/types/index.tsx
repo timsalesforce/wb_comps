@@ -117,12 +117,22 @@ export interface FetchRecordPayload extends BaseRestPayload {
     objectId: string
 }
 
+export interface LoginResponse {
+    metadataServerUrl: string
+    passwordExpired: boolean
+    sandbox: boolean
+    serverUrl: string
+    sessionId: string
+    userId: string
+    userInfo: any
+}
+
 export interface SfdcApi {
     setAxiosAuthHeader: (sid: string) => void
     setAxiosBaseURL: (url: string) => void
     setMiddleUrl?: (url: string) => void
     signin: (baseUrl: string) => Promise<any>
-    login: (username: string, password: string, baseUrl: string, apiVersion?: string) => Promise<any>
+    login: (username: string, password: string, baseUrl: string, apiVersion?: string) => Promise<LoginResponse>
     signout?: () => Promise<any>
     describeGlobal: (payload: BaseRestPayload) => Promise<any>
     sendRest: (payload: AdhocRestPayload) => Promise<any>

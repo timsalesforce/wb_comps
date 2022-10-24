@@ -15,8 +15,8 @@ const Container = styled.div`
 
 interface Props {
   handleError: (error: any) => void
-  signin: (sid: string, baseUrl: string, apiVersion: string) => Promise<any>
-  login: (username: string, password: string, baseUrl: string, apiVersion: string) => Promise<any>
+  signin: (sid: string, baseUrl: string, apiVersion: string) => void
+  login: (username: string, password: string, baseUrl: string, apiVersion: string) => void
 }
 
 // Index Page.
@@ -37,6 +37,7 @@ const Signin: FunctionComponent<Props> = (props) => {
         await props.signin(sid, baseUrl, apiVersion)
       } else {
         await props.login(username, password, baseUrl, apiVersion)
+
       }
     } catch (error) {
         handleError(error)

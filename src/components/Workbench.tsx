@@ -62,7 +62,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const Workbench: FunctionComponent<Props> = props => {
-    const {customApi, sid, apiVersion, sfdcBaseUrl, middleUrl, apiType} = props
+    const {customApi, middleUrl, apiType} = props
 
     const [objects, setObjects] = useState<string[]>([])
     const [errorMessage, setErrorMessage] = useState<string>('')
@@ -70,6 +70,10 @@ const Workbench: FunctionComponent<Props> = props => {
     const [api, setApi] = useState<SfdcApi>(apiStub)
 
     const [tabValue, setTabValue] = useState<number>(0)
+
+    const [sid, setSid] = useState<string>(props.sid || '')
+    const [sfdcBaseUrl, setSfdcBaseUrl] = useState<string>(props.sfdcBaseUrl || 'https://login.salesforce.com')
+    const [apiVersion, setApiVersion] = useState<string>(props.apiVersion || '55.0')
 
     const handleError = useCallback((error: any) => {
       const status = error.response && error.response.status
@@ -81,8 +85,8 @@ const Workbench: FunctionComponent<Props> = props => {
     }, [])
     
     const soapEndpoint = useMemo(() => {
-      return `${props.sfdcBaseUrl}/services/Soap/m/${props.apiVersion}`
-    }, [props.sfdcBaseUrl])
+      return `${sfdcBaseUrl}/services/Soap/m/${apiVersion}`
+    }, [sfdcBaseUrl])
 
     useEffect(() => {
       switch (apiType) {
@@ -128,6 +132,21 @@ const Workbench: FunctionComponent<Props> = props => {
       setErrorMessage('')
       setTabValue(newValue)
     }, [])
+
+    const login = useCallback(async (username: string, password: string, baseUrl: string, apiVersion: string) => {
+      const response = await api.login(username, password, baseUrl, apiVersion)
+      const {sessionId} = response
+      setSfdcBaseUrl(baseUrl)
+      setSid(sessionId)
+      setApiVersion(apiVersion)
+    }, [api])
+
+    const signin = useCallback(async (sid: string, baseUrl: string, apiVersion: string) => {
+      await api.signin(baseUrl)
+      setSfdcBaseUrl(baseUrl)
+      setSid(sid)
+      setApiVersion(apiVersion)
+    }, [api])
 
     return <div style={{width: "100%"}}>
       <WorkbenchContainer>
@@ -181,12 +200,12 @@ const Workbench: FunctionComponent<Props> = props => {
           </TabPanel>
           <TabPanel index={4} value={tabValue}>
             <RestExplorer handleError={handleError} 
-              apiVersion={""} 
-              sfdcBaseUrl={""} 
+              apiVersion={apiVersion} 
+              sfdcBaseUrl={sfdcBaseUrl} 
               sendRest={api.sendRest} 
               postRest={api.postRest}/>
-          </TabPanel></div> || <Signin handleError={handleError} signin={api.signin} 
-                      login={api.login}/>}
+          </TabPanel></div> || <Signin handleError={handleError} signin={signin} 
+                      login={login}/>}
       </WorkbenchContainer>
     </div>
 
