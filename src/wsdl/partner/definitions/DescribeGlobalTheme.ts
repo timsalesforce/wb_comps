@@ -1,0 +1,4 @@
+
+/** describeGlobalTheme */
+export interface DescribeGlobalTheme {
+}

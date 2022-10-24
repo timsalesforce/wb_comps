@@ -1,0 +1,4 @@
+
+/** describeTabs */
+export interface DescribeTabs {
+}

@@ -40,14 +40,14 @@ const Deploy: FunctionComponent<Props> = props => {
 
     const [deployId, setDeployId] = useState<string>()
     const [zipFile, setZipFile] = useState<string>()
-    const [allowMissingFiles, setAllowMissingFiles] = useState<boolean>(false)
-    const [autoUpdatePackage, setAutoUpdatePackage] = useState<boolean>(false)
-    const [checkOnly, setCheckOnly] = useState<boolean>(false)
-    const [ignoreWarnings, setIgnoreWarnings] = useState<boolean>(false)
-    const [performRetrieve, setPerformRetrieve] = useState<boolean>(false)
-    const [purgeOnDelete, setPurgeOnDelete] = useState<boolean>(false)
-    const [rollbackOnError, setRollbackOnError] = useState<boolean>(false)
-    const [singlePackage, setSinglePackage] = useState<boolean>(false)
+    const [allowMissingFiles, setAllowMissingFiles] = useState<string>('false')
+    const [autoUpdatePackage, setAutoUpdatePackage] = useState<string>('false')
+    const [checkOnly, setCheckOnly] = useState<string>('false')
+    const [ignoreWarnings, setIgnoreWarnings] = useState<string>('false')
+    const [performRetrieve, setPerformRetrieve] = useState<string>('false')
+    const [purgeOnDelete, setPurgeOnDelete] = useState<string>('false')
+    const [rollbackOnError, setRollbackOnError] = useState<string>('false')
+    const [singlePackage, setSinglePackage] = useState<string>('false')
     const [runTests, setRunTests] = useState<string[]>()
     const [testLevel, setTestLevel] = useState<string>('NoTestRun')
 
@@ -60,7 +60,7 @@ const Deploy: FunctionComponent<Props> = props => {
           setStatus('Request pending, checking status again in 5s...')
           const intervalId = setInterval(() => {
             NProgress.start()
-            props.sendDeployStatus({id: deployId, includeDetails: true, sessionId: props.sid, soapEndpoint: props.soapEndpoint}).then((response: any) => {
+            props.sendDeployStatus({asyncProcessId: deployId, includeDetails: 'true', sessionId: props.sid, soapEndpoint: props.soapEndpoint}).then((response: any) => {
               if (response.result.done) {
                 setStatus(undefined)
                 clearInterval(intervalId)
@@ -97,17 +97,19 @@ const Deploy: FunctionComponent<Props> = props => {
         handleError('')
 
         const deployPayload: DeployPayload = {
-            zipFile,
-            allowMissingFiles,
-            autoUpdatePackage,
-            ignoreWarnings,
-            checkOnly,
-            performRetrieve,
-            purgeOnDelete,
-            rollbackOnError,
-            singlePackage,
-            runTests,
-            testLevel,
+            ZipFile: zipFile,
+            DeployOptions: {
+                allowMissingFiles,
+                autoUpdatePackage,
+                ignoreWarnings,
+                checkOnly,
+                performRetrieve,
+                purgeOnDelete,
+                rollbackOnError,
+                singlePackage,
+                runTests,
+                testLevel,
+            },
             soapEndpoint: props.soapEndpoint,
             sessionId: props.sid
         }
@@ -130,14 +132,14 @@ const Deploy: FunctionComponent<Props> = props => {
         setDeployId(undefined)
         setZipFile(undefined)
         setStatus(undefined)
-        setAllowMissingFiles(false)
-        setAutoUpdatePackage(false)
-        setIgnoreWarnings(false)
-        setCheckOnly(false)
-        setPerformRetrieve(false)
-        setPurgeOnDelete(false)
-        setRollbackOnError(false)
-        setSinglePackage(false)
+        setAllowMissingFiles('false')
+        setAutoUpdatePackage('false')
+        setIgnoreWarnings('false')
+        setCheckOnly('false')
+        setPerformRetrieve('false')
+        setPurgeOnDelete('false')
+        setRollbackOnError('false')
+        setSinglePackage('false')
         setRunTests([])
         setTestLevel('')
 
@@ -157,72 +159,72 @@ const Deploy: FunctionComponent<Props> = props => {
                     control={<Checkbox></Checkbox>}
                     id="allowMissingFiles"
                     onChange={(_event: any, checked: boolean) => {
-                        setAllowMissingFiles(checked)
+                        setAllowMissingFiles(checked + '')
                     }}
-                    checked={allowMissingFiles}
+                    checked={allowMissingFiles === 'true'}
                 />
                 <FormControlLabel
                     id="autoUpdatePackage"
                     control={<Checkbox></Checkbox>}
                     label='Auto Update Package'
                     onChange={(_event: any, checked: boolean) => {
-                        setAutoUpdatePackage(checked)
+                        setAutoUpdatePackage(checked + '')
                     }}
-                    checked={autoUpdatePackage}
+                    checked={autoUpdatePackage === 'true'}
                 />
                 <FormControlLabel
                     id="checkOnly"
                     control={<Checkbox></Checkbox>}
                     label='Check Only'
                     onChange={(_event: any, checked: boolean) => {
-                        setCheckOnly(checked)
+                        setCheckOnly(checked + '')
                     }}
-                    checked={checkOnly}
+                    checked={checkOnly === 'true'}
                 />
                 <FormControlLabel
                     id="ignoreWarnings"
                     control={<Checkbox></Checkbox>}
                     label='Ignore Warnings'
                     onChange={(_event: any, checked: boolean) => {
-                        setIgnoreWarnings(checked)
+                        setIgnoreWarnings(checked + '')
                     }}
-                    checked={ignoreWarnings}
+                    checked={ignoreWarnings === 'true'}
                 />
                 <FormControlLabel
                     id="performRetrieve"
                     control={<Checkbox></Checkbox>}
                     label='Perform Retrieve'
                     onChange={(_event: any, checked: boolean) => {
-                        setPerformRetrieve(checked)
+                        setPerformRetrieve(checked + '')
                     }}
-                    checked={performRetrieve}
+                    checked={performRetrieve === 'true'}
                 />
                 <FormControlLabel
                     id="purgeOnDelete"
                     control={<Checkbox></Checkbox>}
                     label='Purge On Delete'
                     onChange={(_event: any, checked: boolean) => {
-                        setPurgeOnDelete(checked)
+                        setPurgeOnDelete(checked + '')
                     }}
-                    checked={purgeOnDelete}
+                    checked={purgeOnDelete === 'true'}
                 />
                 <FormControlLabel
                     id="rollbackOnError"
                     control={<Checkbox></Checkbox>}
                     label='Rollback On Error'
                     onChange={(_event: any, checked: boolean) => {
-                        setRollbackOnError(checked)
+                        setRollbackOnError(checked + '')
                     }}
-                    checked={rollbackOnError}
+                    checked={rollbackOnError === 'true'}
                 />
                 <FormControlLabel
                     id="singlePackage"
                     control={<Checkbox></Checkbox>}
                     label='Single Package'
                     onChange={(_event: any, checked: boolean) => {
-                        setSinglePackage(checked)
+                        setSinglePackage(checked + '')
                     }}
-                    checked={singlePackage}
+                    checked={singlePackage === 'true'}
                 />
             </ParametersGrid>
         </PaddedDiv>

@@ -1,0 +1,4 @@
+
+/** describeDataCategoryMappings */
+export interface DescribeDataCategoryMappings {
+}

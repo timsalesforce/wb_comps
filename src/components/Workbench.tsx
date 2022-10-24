@@ -94,7 +94,9 @@ const Workbench: FunctionComponent<Props> = props => {
           setApi(directApi)
           break
         case 'middle':
-          setApi(middleApi)
+          if (middleUrl)
+            setApi(middleApi)
+          else throw new Error('Must include a middleUrl if middleApi is used')
           break
         case 'stub':
             setApi(apiStub)

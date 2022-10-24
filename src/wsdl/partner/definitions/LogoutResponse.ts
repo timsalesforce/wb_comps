@@ -1,0 +1,4 @@
+
+/** logoutResponse */
+export interface LogoutResponse {
+}

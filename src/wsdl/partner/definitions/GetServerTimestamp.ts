@@ -1,0 +1,4 @@
+
+/** getServerTimestamp */
+export interface GetServerTimestamp {
+}

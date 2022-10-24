@@ -1,7 +1,8 @@
 // Dependencies.
 import axios from 'axios'
 import { XMLParser } from 'fast-xml-parser'
-import { AdhocRestPayload, AdhocRestPostPayload, BaseRestPayload, DeployPayload, DeployStatusPayload, DescribeObjectPayload, FetchRecordPayload, RetrievePayload, RetrieveStatusPayload, SObjectDescribeResult, SOQLQueryPayload, UpdateRecordPayload } from '../types'
+import { AdhocRestPayload, AdhocRestPostPayload, BaseRestPayload, DeployPayload, DeployStatusPayload, DescribeObjectPayload, FetchRecordPayload, RetrievePayload, RetrieveStatusPayload, SoapPayload, SObjectDescribeResult, SOQLQueryPayload, UpdateRecordPayload } from '../types'
+import { CheckDeployStatusResponse, CheckRetrieveStatusResponse, createClientAsync as mdClient, DeployResponse, MetadataClient, RetrieveResponse } from '../wsdl/metadata'
 
 const parserOptions = {
   ignoreAttributes: true,
@@ -79,126 +80,28 @@ export async function runQuery(payload: SOQLQueryPayload) : Promise<any> {
   return response.data
 }
 
-export async function sendRetrieve(payload: RetrievePayload) : Promise<any> {
-  const parser = new XMLParser(parserOptions);
-  const xmlPayload = `<?xml version="1.0" encoding="utf-8"?>
-  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://soap.sforce.com/2006/04/metadata">
-      <soap:Header>
-          <tns:SessionHeader>
-              <sessionId>${payload.sessionId}</sessionId>
-          </tns:SessionHeader>
-      </soap:Header>
-      <soap:Body>
-          <retrieve xmlns="http://soap.sforce.com/2006/04/metadata">
-              <retrieveRequest>
-                  <apiVersion>${payload.apiVersion}</apiVersion>
-                  <singlePackage>${payload.singlePackage}</singlePackage>
-                  <unpackaged>
-                      ${payload.types.map(t => `<types><name>${t.name}</name><members>${t.members}</members></types>`)}
-                  </unpackaged>
-              </retrieveRequest>
-          </retrieve>
-      </soap:Body>
-  </soap:Envelope>`
-  const response = await extensionApi.post(payload.soapEndpoint, 
-    xmlPayload, {
-      headers: { 
-        'Content-Type': 'text/xml',
-        'SOAPAction': 'Retrieve'
-      }
-    })
-  return parser.parse(response.data).Envelope.Body.retrieveResponse
+export async function sendRetrieve(payload: RetrievePayload) : Promise<RetrieveResponse> {
+  const client = await getMdSoapClient(payload)
+  const response = await client.retrieveAsync({retrieveRequest: payload})
+  return response[0]
 }
 
-export async function sendDeploy(payload: DeployPayload) : Promise<any> {
-  const parser = new XMLParser(parserOptions);
-  const xmlPayload = `<?xml version="1.0" encoding="utf-8"?>
-  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://soap.sforce.com/2006/04/metadata">
-      <soap:Header>
-          <tns:SessionHeader>
-              <sessionId>${payload.sessionId}</sessionId>
-          </tns:SessionHeader>
-      </soap:Header>
-      <soap:Body>
-          <deploy xmlns="http://soap.sforce.com/2006/04/metadata">
-              <ZipFile>${payload.zipFile}</ZipFile>
-              <DeployOptions>
-                <allowMissingFiles>${payload.allowMissingFiles}</allowMissingFiles>
-                <autoUpdatePackage>${payload.autoUpdatePackage}</autoUpdatePackage>
-                <checkOnly>${payload.checkOnly}</checkOnly>
-                <ignoreWarnings>${payload.ignoreWarnings}</ignoreWarnings>
-                <performRetrieve>${payload.performRetrieve}</performRetrieve>
-                <purgeOnDelete>${payload.purgeOnDelete}</purgeOnDelete>
-                <rollbackOnError>${payload.rollbackOnError}</rollbackOnError>
-                ${payload.runTests && `<runTests>${payload.runTests}</runTests>`}
-                <singlePackage>${payload.singlePackage}</singlePackage>
-                <testLevel>${payload.testLevel}</testLevel>
-              </DeployOptions>
-          </deploy>
-      </soap:Body>
-  </soap:Envelope>`
-  const response = await extensionApi.post(payload.soapEndpoint, 
-    xmlPayload, {
-      headers: { 
-        'Content-Type': 'text/xml',
-        'SOAPAction': 'Deploy'
-      }
-    })
-  return parser.parse(response.data).Envelope.Body.deployResponse  
+export async function sendRetrieveStatus(payload: RetrieveStatusPayload) : Promise<CheckRetrieveStatusResponse> {
+  const client = await getMdSoapClient(payload)
+  const response = await client.checkRetrieveStatusAsync(payload)
+  return response[0]
 }
 
-export async function sendRetrieveStatus(payload: RetrieveStatusPayload) : Promise<any> {
-  const parser = new XMLParser(parserOptions);
-  const xmlPayload = `<?xml version="1.0" encoding="utf-8"?>
-  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://soap.sforce.com/2006/04/metadata">
-      <soap:Header>
-          <tns:SessionHeader>
-              <sessionId>${payload.sessionId}</sessionId>
-          </tns:SessionHeader>
-      </soap:Header>
-      <soap:Body>
-          <checkRetrieveStatus xmlns="http://soap.sforce.com/2006/04/metadata">
-            <id>${payload.id}</id>
-            <includeZip>${payload.includeZip}</includeZip>
-          </checkRetrieveStatus>
-      </soap:Body>
-  </soap:Envelope>`
-  const response = await extensionApi.post(payload.soapEndpoint, 
-    xmlPayload, {
-      headers: { 
-        'Content-Type': 'text/xml',
-        'SOAPAction': 'CheckRetrieveStatus'
-      }
-    })
-  console.log(parser.parse(response.data))
-  return parser.parse(response.data).Envelope.Body.checkRetrieveStatusResponse
+export async function sendDeploy(payload: DeployPayload) : Promise<DeployResponse> {
+  const client = await getMdSoapClient(payload)
+  const response = await client.deployAsync(payload)
+  return response[0]
 }
 
-export async function sendDeployStatus(payload: DeployStatusPayload) : Promise<any> {
-  const parser = new XMLParser(parserOptions);
-  const xmlPayload = `<?xml version="1.0" encoding="utf-8"?>
-  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://soap.sforce.com/2006/04/metadata">
-      <soap:Header>
-          <tns:SessionHeader>
-              <sessionId>${payload.sessionId}</sessionId>
-          </tns:SessionHeader>
-      </soap:Header>
-      <soap:Body>
-          <checkDeployStatus xmlns="http://soap.sforce.com/2006/04/metadata">
-            <id>${payload.id}</id>
-            <includeDetails>${payload.includeDetails}</includeDetails>
-          </checkDeployStatus>
-      </soap:Body>
-  </soap:Envelope>`
-  const response = await extensionApi.post(payload.soapEndpoint, 
-    xmlPayload, {
-      headers: { 
-        'Content-Type': 'text/xml',
-        'SOAPAction': 'CheckDeployStatus'
-      }
-    })
-  console.log(parser.parse(response.data))
-  return parser.parse(response.data).Envelope.Body.checkDeployStatusResponse
+export async function sendDeployStatus(payload: DeployStatusPayload) : Promise<CheckDeployStatusResponse> {
+ const client = await getMdSoapClient(payload)
+ const response = await client.checkDeployStatusAsync(payload)
+ return response[0]
 }
 
 export async function fetchRecord(payload: FetchRecordPayload) : Promise<object> {
@@ -215,5 +118,13 @@ export async function updateRecord(payload: UpdateRecordPayload) : Promise<any> 
       }
     })
   return response.data
+}
+
+async function getMdSoapClient(payload: SoapPayload) : Promise<MetadataClient> {
+  const client = await mdClient('../wsdl/metadata')
+  client.setEndpoint(payload.soapEndpoint)
+  client.setSOAPAction('CheckDeployStatus')
+  client.addSoapHeader({SessionHeader: {sessionId: payload.sessionId}}, 'sessionId', 'tns')
+  return client
 }
 

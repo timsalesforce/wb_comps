@@ -1,0 +1,4 @@
+
+/** getUserInfo */
+export interface GetUserInfo {
+}

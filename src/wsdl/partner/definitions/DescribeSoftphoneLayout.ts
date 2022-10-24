@@ -1,0 +1,4 @@
+
+/** describeSoftphoneLayout */
+export interface DescribeSoftphoneLayout {
+}

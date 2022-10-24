@@ -46,42 +46,42 @@ export interface NameAndMembers {
     members: string[]
 }
 
-export interface RetrievePayload {
+export interface SoapPayload {
+    soapEndpoint: string
+    sessionId: string
+}
+
+export interface RetrievePayload extends SoapPayload {
     types: NameAndMembers[]
     packageNames: string[]
-    singlePackage: boolean
-    sessionId: string
-    soapEndpoint: string
+    singlePackage: string
     apiVersion: string
 }
 
-export interface RetrieveStatusPayload {
+export interface RetrieveStatusPayload extends SoapPayload {
     id: string
-    includeZip: boolean
-    sessionId: string
-    soapEndpoint: string
+    includeZip: string
 }
 
-export interface DeployPayload {
-    autoUpdatePackage: boolean
-    checkOnly: boolean
-    ignoreWarnings: boolean
-    performRetrieve: boolean
-    purgeOnDelete: boolean
-    rollbackOnError: boolean
-    runTests?: string[]
-    singlePackage: boolean
-    testLevel: string
-    allowMissingFiles: boolean
-    zipFile?: string
-    sessionId?: string
-    soapEndpoint: string
+export interface DeployPayload extends SoapPayload {
+    DeployOptions: {
+        autoUpdatePackage: string
+        checkOnly: string
+        ignoreWarnings: string
+        performRetrieve: string
+        purgeOnDelete: string
+        rollbackOnError: string
+        runTests?: string[]
+        singlePackage: string
+        testLevel: string
+        allowMissingFiles: string
+    }
+    ZipFile?: string
 }
-export interface DeployStatusPayload {
-    id: string
-    includeDetails: boolean
-    sessionId: string
-    soapEndpoint: string
+
+export interface DeployStatusPayload extends SoapPayload {
+    asyncProcessId: string
+    includeDetails: string
 }
 
 export interface BaseRestPayload {

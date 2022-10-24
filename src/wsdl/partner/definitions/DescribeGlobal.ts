@@ -1,0 +1,4 @@
+
+/** describeGlobal */
+export interface DescribeGlobal {
+}

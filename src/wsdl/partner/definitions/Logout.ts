@@ -1,0 +1,4 @@
+
+/** logout */
+export interface Logout {
+}

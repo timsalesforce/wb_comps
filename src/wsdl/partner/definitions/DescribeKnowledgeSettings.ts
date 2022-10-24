@@ -1,0 +1,4 @@
+
+/** describeKnowledgeSettings */
+export interface DescribeKnowledgeSettings {
+}

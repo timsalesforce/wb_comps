@@ -3,7 +3,7 @@
   "publish_config": {
     "registry": "https://npm.pkg.github.com/timsalesforce"
   },
-  "version": "1.4.5",
+  "version": "1.5.2",
   "description": "Workbench Application Components",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -53,13 +53,16 @@
     "@mui/material": "^5.10.8",
     "@mui/styled-engine": "^5.10.8",
     "@mui/styled-engine-sc": "^5.10.6",
+    "@textea/json-viewer": "^2.9.1",
     "axios": "^1.1.2",
     "fast-xml-parser": "^4.0.11",
     "nprogress": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-xml-parser": "^1.1.8",
-    "styled-components": "^5.3.6",
-    "@textea/json-viewer": "^2.9.1"
+    "styled-components": "^5.3.6"
+  },
+  "dependencies": {
+    "soap": "^0.45.0"
   }
 }

@@ -48,7 +48,7 @@ const Retrieve: FunctionComponent<Props> = props => {
     const [zipFile, setZipFile] = useState<string>()
     const [_packageFile, setPackageFile] = useState<File>()
     const [packageNames, setPackageNames] = useState<string[]>([])
-    const [singlePackage, setSinglePackage] = useState<boolean>(false)
+    const [singlePackage, setSinglePackage] = useState<string>('false')
     const [retrieveType, setRetrieveType] = useState<string>('file')
 
     const [inputRef, setInputRef] = useState<any>()
@@ -60,7 +60,7 @@ const Retrieve: FunctionComponent<Props> = props => {
           setStatus('Request pending, checking status again in 5s...')
           const intervalId = setInterval(() => {
             NProgress.start()
-            props.sendRetrieveStatus({id: retrieveId, includeZip: false, sessionId: props.sid, soapEndpoint: props.soapEndpoint}).then((response: any) => {
+            props.sendRetrieveStatus({id: retrieveId, includeZip: 'false', sessionId: props.sid, soapEndpoint: props.soapEndpoint}).then((response: any) => {
               if (response.result.done) {
                 setStatus(undefined)
                 clearInterval(intervalId)
@@ -79,7 +79,7 @@ const Retrieve: FunctionComponent<Props> = props => {
     
     const downloadZip = useCallback(async () => {
         handleError('')
-        const response = await props.sendRetrieveStatus({id: retrieveId!, includeZip: true, sessionId: props.sid, soapEndpoint: props.soapEndpoint})
+        const response = await props.sendRetrieveStatus({id: retrieveId!, includeZip: 'true', sessionId: props.sid, soapEndpoint: props.soapEndpoint})
         setZipFile(response.result.zipFile)
     }, [retrieveId])
 
@@ -204,9 +204,9 @@ const Retrieve: FunctionComponent<Props> = props => {
                 id="singlePackage"
                 label='Single Package'
                 onChange={(_event: any, checked: boolean) => {
-                    setSinglePackage(checked)
+                    setSinglePackage(checked + '')
                 }}
-                checked={singlePackage}
+                checked={singlePackage === 'true'}
             />
         </PaddedDiv>
         <Button onClick={retrieve}>Retrieve</Button>
